@@ -1,0 +1,282 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+}
+
+html {
+  font-size: 10px;
+}
+
+.text_400 {
+  font-weight: 400;
+}
+
+.text_500 {
+  font-weight: 500;
+}
+
+.todo_container {
+  padding: 2%;
+  background-color: #fffbff;
+  position: relative;
+}
+
+#searchContainer {
+  /*width: 50vw;*/
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 45px 20px;
+}
+
+#searchInput {
+  width: 95vw;
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1px solid rgb(177, 141, 229);
+  outline: none;
+  background-color: rgb(233, 219, 246);
+  box-shadow: 1px 2px 7px 2px rgb(205, 192, 216);
+  color: rgb(2, 3, 53);
+  transition: all 0.3s ease;
+}
+#searchInput::placeholder {
+  color: rgb(86, 13, 155);
+  font-style: italic;
+}
+#searchInput:focus {
+  border: 1px solid rgb(71, 42, 114);
+  box-shadow: 1px 2px 4px 2px rgb(230, 224, 235);
+}
+
+/* Стилизация крестика */
+#searchInput[type="search"]::-webkit-search-cancel-button {
+  margin-right: 10px;
+}
+
+.searchLabel {
+  position: relative;
+  display: inline-block;
+}
+
+#searchIcon {
+  position: absolute;
+  right: 6px; /* Отступ слева */
+  top: 50%; /* Выравнивание по вертикали */
+  transform: translateY(
+    -50%
+  ); /* Сдвиг изображения на половину его высоты вверх */
+  width: 20px; /* Ширина изображения */
+  height: 20px; /* Высота изображения */
+}
+
+.todoCreate > h2 {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+#newCase {
+  background-color: #f7f2fa;
+  padding: 2%;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-gap: 16px;
+  border-radius: 16px;
+}
+
+#caseDesc,
+#caseDate {
+  border-radius: 4px;
+  border: none;
+  outline: 1px solid #49454f;
+  width: 100%;
+  height: 56px;
+  padding-left: 2%;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
+#createTodoBtn {
+  grid-column-start: 2;
+  background-color: #6750a4;
+  color: #ffffff;
+  border: none;
+}
+
+#clearTodoCreateInputs {
+  background-color: #f7f2fa;
+  border: 1px solid #79747e;
+  color: #6750a4;
+}
+
+#caseDate[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  margin-right: 10px;
+
+}
+
+#createTodoBtn,
+#clearTodoCreateInputs {
+  width: 100%;
+  height: 40px;
+  border-radius: 100px;
+  justify-self: end;
+  cursor: pointer;
+}
+
+#createTask {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background-color: #ebdef7;
+  box-shadow: 1px 2px 4px 2px #00000015;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  transition: all 0.5s ease;
+}
+
+#createTask:hover {
+  background-color: #ccb8d9;
+}
+
+#createTask img {
+  width: 40%;
+  height: 40%;
+}
+
+.hidden {
+  display: none;
+}
+
+#createTask {
+    cursor: pointer;
+}
+
+.todo_list > h2 {
+  font-size: 2rem;
+  margin: 16px 0 16px 0;
+
+}
+
+.todoGroup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  overflow: hidden;
+  color: #1d192b;
+  margin-bottom: 16px;
+}
+
+.todo_type {
+
+  display: inline-block;
+  float: left;
+  width: 33vw;
+}
+.todoGroup input[type="radio"] {
+  display: none;
+}
+.todoGroup label {
+  width: 100%;
+  display: inline-block;
+  cursor: pointer;
+  padding: 0px 15px;
+  line-height: 34px;
+  border: 1px solid #79747e;
+  border-right: none;
+  user-select: none;
+  text-align: center;
+}
+
+.todoGroup .todo_type:first-child label {
+  border-radius: 16px 0 0 16px;
+}
+.todoGroup .todo_type:last-child label {
+  border-radius: 0 16px 16px 0;
+  border-right: 1px solid #79747e;
+}
+
+.selected::before {
+  content: "✓ ";
+  color: #1D192B;
+
+}
+
+/* Checked */
+.todoGroup input[type="radio"]:checked + label {
+  background: #e8def8;
+}
+
+/* Hover */
+.todoGroup label:hover {
+  color: #666;
+}
+
+/* Disabled */
+.todoGroup input[type="radio"]:disabled + label {
+  background: #efefef;
+  color: #666;
+}
+
+.tasksList {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.taskContainer {
+  width: 100%;
+  background-color: #F7F2FA;
+  border-radius: 16px;
+  padding: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+}
+
+.taskContainer p {
+  font-size: 1.6rem;
+  max-width: 90vw;
+}
+
+.taskContainer > input {
+  width: 18px;
+  height: 18px;
+
+
+  margin-left: 10px;
+  margin-right: 10px;
+  accent-color: #D0BCFF;
+}
+
+.taskContainer > input:checked {
+  accent-color: #b79cff;
+}
+
+/*.taskContainer > input:hover {*/
+/*  accent-color: #D0BCFF;*/
+/*}*/
+
+.taskInfo {
+  display: flex;
+  flex-direction: column;
+
+}
+.taskDate {
+  /*margin-bottom: 2px;*/
+}
+
+.taskDesc {
+  /*margin-top: 2px;*/
+}
