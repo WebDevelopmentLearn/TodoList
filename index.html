@@ -40,13 +40,13 @@
         <h2 class="text_500">Новая запись</h2>
         <form id="newCase" action="">
             <input
-                    id="caseDesc"
+                    id="taskDesc"
                     class="text_400"
                     type="text"
                     placeholder="Описание"
             />
             <input
-                    id="caseDate"
+                    id="taskDate"
                     class="text_400"
                     type="text"
                     placeholder="Дата"
@@ -65,21 +65,21 @@
             />
         </form>
     </div>
-    <div class="todo_list">
+    <div class="todoContainer">
         <h2 class="text_500">Список дел</h2>
 
         <div class="todoGroup">
-            <div class="todo_type">
-                <input id="radio-1" type="radio" name="radio" value="1" checked/>
-                <label class="text_500 selected" for="radio-1">Все</label>
+            <div class="todoType">
+                <input id="allTasks" type="radio" name="radio" value="1" checked/>
+                <label class="text_500 selected" for="allTasks">Все</label>
             </div>
-            <div class="todo_type">
-                <input id="radio-2" type="radio" name="radio" value="2"/>
-                <label class="text_500" for="radio-2">Активные</label>
+            <div class="todoType">
+                <input id="notCompleted" type="radio" name="radio" value="2"/>
+                <label class="text_500" for="notCompleted">Активные</label>
             </div>
-            <div class="todo_type">
-                <input id="radio-3" type="radio" name="radio" value="3"/>
-                <label class="text_500" for="radio-3">Завершенные</label>
+            <div class="todoType">
+                <input id="completed" type="radio" name="radio" value="3"/>
+                <label class="text_500" for="completed">Завершенные</label>
             </div>
         </div>
         <div class="tasksList">
