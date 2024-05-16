@@ -1,35 +1,34 @@
 const regDate = /^\d{4,}-\d{2}-\d{2}T\d{2}:\d{2}$/;
 const currentDate = new Date();
 const dayOfWeek = currentDate.getDay();
-const days = [
-  "Воскресенье",
-  "Понедельник",
-  "Вторник",
-  "Среда",
-  "Четверг",
-  "Пятница",
-  "Суббтоа",
-];
-const months = [
-  "Января",
-  "Февраля",
-  "Марта",
-  "Апреля",
-  "Мая",
-  "Июня",
-  "Июля",
-  "Августа",
-  "Сентября",
-  "Октября",
-  "Ноября",
-  "Декабря",
-];
-let month = months[currentDate.getMonth()];
-
+const days = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
+const months = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"];
 const dayName = document.querySelector("#dayName");
 const day = document.querySelector("#dayPar");
+let month = months[currentDate.getMonth()];
 dayName.textContent = days[dayOfWeek];
-day.textContent = currentDate.getDate() + " " + month;
+
+
+const SHOW_TIME = false;
+function updateTime() {
+  const now = new Date()
+  currentHour = now.getHours();
+  currentMin = String(now.getMinutes()).padStart(2, '0');
+  day.textContent = `${now.getDate()} ${month} ${currentHour}:${currentMin}`;
+}
+
+if (SHOW_TIME) {
+  let currentHour = currentDate.getHours();
+  let currentMin = String(currentDate.getMinutes()).padStart(2, '0');
+  day.textContent = `${currentDate.getDate()} ${month} ${currentHour}:${currentMin}`;
+  window.onload = () => {
+    updateTime();
+    setInterval(updateTime, 60000);
+  };
+} else {
+  day.textContent = `${currentDate.getDate()} ${month}`;
+}
+
 
 const todoType1 = document.querySelector("#radio-1");
 const todoType2 = document.querySelector("#radio-2");
@@ -42,21 +41,32 @@ const createBtn = document.querySelector("#createTask");
 const createContainer = document.querySelector(".todoCreate");
 const allTasks = JSON.parse(localStorage.getItem("allTasks")) || [];
 const todoListContainer = document.querySelector(".tasksList");
+const taskDeskInput = document.querySelector("#caseDesc");
+const taskDateInput = document.querySelector("#caseDate");
+const newTaskForm = document.querySelector("#newCase");
+let id = allTasks.length !== 0 ? allTasks[allTasks.length - 1].taskId + 1 : 0;
 
-function initTasks(objArray) {
-  todoListContainer.innerHTML = "";
-  objArray.forEach((el) => {
-    createTaskCard(el);
-  })
-}
+const tasksCheckboxes = document.querySelectorAll(".taskCheckbox");
 initTasks(allTasks);
+
+
+tasksCheckboxes.forEach((el, index) => {
+  el.addEventListener("change", (event) => {
+    allTasks.forEach((taskObj, objId) => {
+      if (index === objId) {
+        updateTaskCard(taskObj, allTasks, event.target.checked);
+        checkPars(getPar("date",event.target), getPar("desc",event.target), event.target.checked);
+      }
+    })
+  })
+})
+
 
 todoTypes.forEach((el, id) => {
   el.addEventListener("change", () => {
     containers.forEach((el, i) => {
       el.children[1].classList.remove("selected");
     });
-    todoTypes.forEach((otherInput) => {});
     if (el.checked) {
       containers[id].children[1].classList.add("selected");
     }
@@ -86,18 +96,18 @@ createBtn.addEventListener("click", () => {
   createContainer.classList.toggle("hidden");
 });
 
-
-
-const taskDeskInput = document.querySelector("#caseDesc");
-const taskDateInput = document.querySelector("#caseDate");
-const newTaskForm = document.querySelector("#newCase");
-
-const tasksCheckboxes = document.querySelectorAll(".taskCheckbox");
-let id = allTasks.length !== 0 ? allTasks[allTasks.length - 1].taskId + 1 : 0;
+newTaskForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const newTask = createTask(taskDeskInput.value, taskDateInput.value);
+  if (newTask !== null) {
+    allTasks.push(newTask);
+    localStorage.setItem("allTasks", JSON.stringify(allTasks));
+    createTaskCard(newTask);
+  }
+})
 
 const createTask = (desc, date) => {
   if (desc === "" || date === "") {
-    // console.log(date);
     alert("Поля Описание и Дата не должны быть пустыми!");
     return null;
   } else {
@@ -108,44 +118,25 @@ const createTask = (desc, date) => {
       isComplete: false
     }
   }
-
 }
-
-newTaskForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  // console.log(taskDateInput.value);
-  const newTask = createTask(taskDeskInput.value, taskDateInput.value);
-  if (newTask !== null) {
-    allTasks.push(newTask);
-    localStorage.setItem("allTasks", JSON.stringify(allTasks));
-    createTaskCard(newTask);
-  }
-
-
-
-})
 
 function createTaskCard(obj) {
   const taskContainer = document.createElement("div");
   taskContainer.id = "task_" + obj.taskId;
   taskContainer.classList.add("taskContainer");
-
   const datePar = document.createElement("p");
   const descPar = document.createElement("p");
   const date = formatDate(obj.taskDate);
   if (date === "") return;
-
   const checkBox = document.createElement("input");
   checkBox.setAttribute("type", "checkbox");
   checkBox.classList.add("taskCheckbox");
-  if (obj.isComplete) {
-    checkBox.checked = true;
-    datePar.style.opacity = obj.isComplete ? 0.5 : 1;
-    descPar.style.opacity = obj.isComplete ? 0.5 : 1;
-    descPar.style.textDecoration = obj.isComplete
-        ? "line-through"
-        : "none";
-  }
+  checkBox.checked = obj.isComplete;
+  checkPars(datePar, descPar, checkBox.checked);
+  checkBox.addEventListener("change", (event) => {
+    updateTaskCard(obj, allTasks, event.target.checked);
+    checkPars(getPar("date",event.target), getPar("desc",event.target), event.target.checked);
+  });
   const taskInfoContainer = document.createElement("div");
   taskInfoContainer.classList.add("taskInfo");
   datePar.textContent = date;
@@ -155,32 +146,46 @@ function createTaskCard(obj) {
   taskInfoContainer.append(datePar, descPar);
   taskContainer.append(checkBox, taskInfoContainer);
   todoListContainer.append(taskContainer);
-  console.log("test");
 }
 
-tasksCheckboxes.forEach((el, index) => {
-  el.addEventListener("change", (event) => {
-    const parDate = event.target.parentNode.children[1].children[0];
-    const parDesc = event.target.parentNode.children[1].children[1];
-    console.log("125215");
-    allTasks.forEach((taskObj, objId) => {
 
-      console.log(index, objId);
-      if (index === objId) {
+function checkPars(parDate, parDesc, isChecked) {
+  parDate.style.opacity = isChecked ? 0.5 : 1;
+  parDesc.style.opacity = isChecked ? 0.5 : 1;
+  parDesc.style.textDecoration = isChecked ? "line-through" : "none";
+}
 
-        taskObj.isComplete = event.target.checked;
-        console.log(taskObj);
-        localStorage.setItem("allTasks", JSON.stringify(allTasks));
-        // initTasks(allTasks);
-        parDate.style.opacity = event.target.checked ? 0.5 : 1;
-        parDesc.style.opacity = event.target.checked ? 0.5 : 1;
-        parDesc.style.textDecoration = event.target.checked
-            ? "line-through"
-            : "none";
-      }
-    })
+function updateTaskCard(obj, tasksObjList, checked) {
+  obj.isComplete = checked;
+  localStorage.setItem("allTasks", JSON.stringify(tasksObjList));
+}
+
+
+/**
+ * Функция возвращает родительский элемент по типу и объекту
+ * @param type - тип элемента, где: 'date' - дата, 'desc' - описание
+ * @param obj - объект, для которого нужно найти родителя
+ * @returns {Element} - родительский элемент
+ */
+function getPar(type, obj) {
+  if (type === "date") {
+    return  obj.parentNode.children[1].children[0];
+  } else if (type === "desc") {
+    return obj.parentNode.children[1].children[1];
+  }
+}
+
+
+/**
+ * Функция инициализирует таски в зависимости от переданного массива объектов
+ * @param objArray - массив объектов, которые нужно отобразить
+ */
+function initTasks(objArray) {
+  todoListContainer.innerHTML = "";
+  objArray.forEach((el) => {
+    createTaskCard(el);
   })
-})
+}
 
 
 /**
@@ -228,12 +233,9 @@ function formatDate(dateTimeStr) {
   const min = dateAndMin[1];
   const yearMonthAndDay = getYearMonthAndDay(dateAndMin);
   const dayAndHour = getDayAndHour(yearMonthAndDay);
-
   const monthNum = Number(yearMonthAndDay[1] -1);
   const monthStrn = months[monthNum];
-
   const currentYear = String(currentDate.getFullYear());
-
   const year = yearMonthAndDay[0];
   let newDate;
   if (currentYear === year) {
@@ -241,8 +243,6 @@ function formatDate(dateTimeStr) {
   } else {
     newDate = `${dayAndHour[0]} ${monthStrn} ${year}, ${dayAndHour[1]}:${min}`;
   }
-
-  // console.log(newDate);
   return newDate;
 }
 
