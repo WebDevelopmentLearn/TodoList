@@ -8,8 +8,8 @@ const day = document.querySelector("#dayPar");
 let month = months[currentDate.getMonth()];
 dayName.textContent = days[dayOfWeek];
 
-
-const SHOW_TIME = false;
+// ================ ВЫВОД ТЕКУЩЕГО ВРЕМЕНИ В РЕАЛТАЙМЕ [НАЧАЛО] ====================
+const SHOW_TIME = true;
 function updateTime() {
   const now = new Date()
   currentHour = now.getHours();
@@ -28,6 +28,7 @@ if (SHOW_TIME) {
 } else {
   day.textContent = `${currentDate.getDate()} ${month}`;
 }
+// ================ ВЫВОД ТЕКУЩЕГО ВРЕМЕНИ В РЕАЛТАЙМЕ [КОНЕЦ] ====================
 
 const searchInput = document.querySelector("#searchInput");
 const todoType1 = document.querySelector("#allTasks");
@@ -49,6 +50,8 @@ let id = allTasks.length !== 0 ? allTasks[allTasks.length - 1].taskId + 1 : 0;
 const tasksCheckboxes = document.querySelectorAll(".taskCheckbox");
 initTasks(allTasks);
 
+
+// ================ ПОИСК [НАЧАЛО] ====================
 searchInput.addEventListener("input", (event) => {
     const searchValue = event.target.value;
     const filteredTasks = allTasks.filter((el) => {
@@ -56,8 +59,10 @@ searchInput.addEventListener("input", (event) => {
     });
     initTasks(filteredTasks);
 });
+// ================ ПОИСК [КОНЕЦ] ====================
 
 
+// ================ ОБНОВЛЕНИЕ СОСТОЯНИЯ ТАСКОВ [КОНЕЦ] ====================
 tasksCheckboxes.forEach((el, index) => {
   el.addEventListener("change", (event) => {
     allTasks.forEach((taskObj, objId) => {
@@ -91,7 +96,9 @@ todoTypes.forEach((el, id) => {
     }
   });
 });
+// ================ ОБНОВЛЕНИЕ СОСТОЯНИЯ ТАСКОВ [КОНЕЦ] ====================
 
+// ================ ИЗМЕНЕНИЕ ТИПА ПОЛЯ С УКАЗАНИЕМ ДАТЫ [НАЧАЛО] ====================
 dateInput.addEventListener("focus", () => {
   dateInput.setAttribute("type", "datetime-local");
 });
@@ -100,10 +107,17 @@ dateInput.addEventListener("blur", () => {
   dateInput.setAttribute("type", "text");
 });
 
+// ================ ИЗМЕНЕНИЕ ТИПА ПОЛЯ С УКАЗАНИЕМ ДАТЫ [КОНЕЦ] ====================
+
+// ================ СКРЫТИЕ/ОТКРЫТИЯ БЛОКА СОЗДАНИЯ ТАСКА [НАЧАЛО] ====================
 createBtn.addEventListener("click", () => {
   createContainer.classList.toggle("hidden");
 });
+// ================ СКРЫТИЕ/ОТКРЫТИЯ БЛОКА СОЗДАНИЯ ТАСКА [КОНЕЦ] ====================
 
+
+
+// ================ СОЗДАНИЕ ТАСКА [НАЧАЛО] ====================
 newTaskForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const newTask = createTask(taskDeskInput.value, taskDateInput.value);
@@ -156,6 +170,10 @@ function createTaskCard(obj) {
   todoListContainer.append(taskContainer);
 }
 
+// ================ СОЗДАНИЕ ТАСКА [КОНЕЦ] ====================
+
+
+// ================ УДАЛЕНИЕ ТАСКА [WIP] [НАЧАЛО] ====================
 /**
  * TODO: Дописать функционал удаления тасков и не забыть про вызов функции
  * Функция отвечает за отрисовку hover-эффекта на тасках и их удаления
@@ -193,6 +211,12 @@ function removeTask(taskId) {
     
 }
 
+// ================ УДАЛЕНИЕ ТАСКА [WIP] [КОНЕЦ] ====================
+
+
+
+
+// ================ УТИЛИТАРНЫЕ ФУНКЦИИ [НАЧАЛО] ====================
 function checkPars(parDate, parDesc, isChecked) {
   parDate.style.opacity = isChecked ? 0.5 : 1;
   parDesc.style.opacity = isChecked ? 0.5 : 1;
@@ -317,6 +341,4 @@ function getYearMonthAndDay(array) {
 function getDayAndHour(array) {
   return array[2].split("T");
 }
-
-
-
+// ================ УТИЛИТАРНЫЕ ФУНКЦИИ [КОНЕЦ] ====================
