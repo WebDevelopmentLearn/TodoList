@@ -43,10 +43,12 @@ html {
   color: rgb(2, 3, 53);
   transition: all 0.3s ease;
 }
+
 #searchInput::placeholder {
   color: rgb(86, 13, 155);
   font-style: italic;
 }
+
 #searchInput:focus {
   border: 1px solid rgb(71, 42, 114);
   box-shadow: 1px 2px 4px 2px rgb(230, 224, 235);
@@ -88,8 +90,8 @@ html {
   border-radius: 16px;
 }
 
-#caseDesc,
-#caseDate {
+#taskDesc,
+#taskDate {
   border-radius: 4px;
   border: none;
   outline: 1px solid #49454f;
@@ -159,7 +161,7 @@ html {
     cursor: pointer;
 }
 
-.todo_list > h2 {
+.todoContainer > h2 {
   font-size: 2rem;
   margin: 16px 0 16px 0;
 
@@ -175,7 +177,7 @@ html {
   margin-bottom: 16px;
 }
 
-.todo_type {
+.todoType {
 
   display: inline-block;
   float: left;
@@ -196,10 +198,10 @@ html {
   text-align: center;
 }
 
-.todoGroup .todo_type:first-child label {
+.todoGroup .todoType:first-child label {
   border-radius: 16px 0 0 16px;
 }
-.todoGroup .todo_type:last-child label {
+.todoGroup .todoType:last-child label {
   border-radius: 0 16px 16px 0;
   border-right: 1px solid #79747e;
 }
