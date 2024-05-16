@@ -5,22 +5,7 @@
     <title>TodoList</title>
     <link rel="stylesheet" href="./styles/style.css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link
-            href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
-            rel="stylesheet"
-    />
-    <script
-            src="https://kit.fontawesome.com/5a495bdc39.js"
-            crossorigin="anonymous"
-    ></script>
-
-    <!-- Подключение jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Подключение jQuery UI Datepicker -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://kit.fontawesome.com/5a495bdc39.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="todo_container">
@@ -29,45 +14,20 @@
     <form action="" id="searchContainer">
         <label for="searchInput" class="searchLabel">
             <input id="searchInput" type="search" placeholder="Поиск"/>
-            <img
-                    id="searchIcon"
-                    src="./assets/icons/search_icon.svg"
-                    alt="search_icon"
-            />
+            <img id="searchIcon" src="./assets/icons/search_icon.svg" alt="search_icon"/>
         </label>
     </form>
     <div class="todoCreate hidden">
         <h2 class="text_500">Новая запись</h2>
         <form id="newCase" action="">
-            <input
-                    id="taskDesc"
-                    class="text_400"
-                    type="text"
-                    placeholder="Описание"
-            />
-            <input
-                    id="taskDate"
-                    class="text_400"
-                    type="text"
-                    placeholder="Дата"
-            />
-            <input
-                    id="createTodoBtn"
-                    class="text_500"
-                    type="submit"
-                    value="Добавить"
-            />
-            <input
-                    id="clearTodoCreateInputs"
-                    class="text_500"
-                    type="reset"
-                    value="Очистить"
-            />
+            <input id="taskDesc" class="text_400" type="text" placeholder="Описание"/>
+            <input id="taskDate" class="text_400" type="text" placeholder="Дата"/>
+            <input id="createTodoBtn" class="text_500" type="submit" value="Добавить"/>
+            <input id="clearTodoCreateInputs" class="text_500" type="reset" value="Очистить"/>
         </form>
     </div>
     <div class="todoContainer">
         <h2 class="text_500">Список дел</h2>
-
         <div class="todoGroup">
             <div class="todoType">
                 <input id="allTasks" type="radio" name="radio" value="1" checked/>
@@ -83,7 +43,6 @@
             </div>
         </div>
         <div class="tasksList">
-
         </div>
     </div>
     <div id="createTask">
