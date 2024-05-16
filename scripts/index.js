@@ -30,19 +30,19 @@ if (SHOW_TIME) {
 }
 
 const searchInput = document.querySelector("#searchInput");
-const todoType1 = document.querySelector("#radio-1");
-const todoType2 = document.querySelector("#radio-2");
-const todoType3 = document.querySelector("#radio-3");
+const todoType1 = document.querySelector("#allTasks");
+const todoType2 = document.querySelector("#notCompleted");
+const todoType3 = document.querySelector("#completed");
 const todoTypes = [todoType1, todoType2, todoType3];
 
-const containers = document.querySelectorAll(".todo_type");
-const dateInput = document.querySelector("#caseDate");
+const containers = document.querySelectorAll(".todoType");
+const dateInput = document.querySelector("#taskDate");
 const createBtn = document.querySelector("#createTask");
 const createContainer = document.querySelector(".todoCreate");
 const allTasks = JSON.parse(localStorage.getItem("allTasks")) || [];
 const todoListContainer = document.querySelector(".tasksList");
-const taskDeskInput = document.querySelector("#caseDesc");
-const taskDateInput = document.querySelector("#caseDate");
+const taskDeskInput = document.querySelector("#taskDesc");
+const taskDateInput = document.querySelector("#taskDate");
 const newTaskForm = document.querySelector("#newCase");
 let id = allTasks.length !== 0 ? allTasks[allTasks.length - 1].taskId + 1 : 0;
 
@@ -149,13 +149,49 @@ function createTaskCard(obj) {
   taskInfoContainer.classList.add("taskInfo");
   datePar.textContent = date;
   descPar.textContent = obj.taskDesc;
-  datePar.classList.add("text_400", "taskDate");
-  descPar.classList.add("text_400", "taskDesc");
+  datePar.classList.add("text_400");
+  descPar.classList.add("text_400");
   taskInfoContainer.append(datePar, descPar);
   taskContainer.append(checkBox, taskInfoContainer);
   todoListContainer.append(taskContainer);
 }
 
+/**
+ * TODO: Дописать функционал удаления тасков и не забыть про вызов функции
+ * Функция отвечает за отрисовку hover-эффекта на тасках и их удаления
+ */
+function renderHoverAndRemoveTasks() {
+
+  for (let i = 0; i < todoListContainer.children.length; i++) {
+    const defaultBcgColor = todoListContainer.children[i].style.backgroundColor;
+    todoListContainer.children[i].addEventListener("pointerover", () => {
+      todoListContainer.children[i].style.backgroundColor = "#e0d6e3";
+    });
+
+    todoListContainer.children[i].addEventListener("pointerout", (event) => {
+      todoListContainer.children[i].style.backgroundColor = defaultBcgColor;
+    });
+    todoListContainer.children[i].addEventListener("click", () => {
+      //remove
+      const taskId = todoListContainer.children[i].id.split("_")[1];
+      console.log(taskId);
+        removeTask(taskId);
+        updateTaskCard(taskId, allTasks, false);
+    });
+  }
+}
+
+function removeTask(taskId) {
+    allTasks.forEach((el, index) => {
+      taskId = Number(taskId);
+      console.log(`el.taskId: ${el.taskId}, taskId: ${taskId} index: ${index} `);
+        if (el.taskId === taskId) {
+        allTasks.splice(index, 1);
+        localStorage.setItem("allTasks", JSON.stringify(allTasks));
+        }
+    });
+    
+}
 
 function checkPars(parDate, parDesc, isChecked) {
   parDate.style.opacity = isChecked ? 0.5 : 1;
