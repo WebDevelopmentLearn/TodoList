@@ -29,7 +29,7 @@ if (SHOW_TIME) {
   day.textContent = `${currentDate.getDate()} ${month}`;
 }
 
-
+const searchInput = document.querySelector("#searchInput");
 const todoType1 = document.querySelector("#radio-1");
 const todoType2 = document.querySelector("#radio-2");
 const todoType3 = document.querySelector("#radio-3");
@@ -48,6 +48,14 @@ let id = allTasks.length !== 0 ? allTasks[allTasks.length - 1].taskId + 1 : 0;
 
 const tasksCheckboxes = document.querySelectorAll(".taskCheckbox");
 initTasks(allTasks);
+
+searchInput.addEventListener("input", (event) => {
+    const searchValue = event.target.value;
+    const filteredTasks = allTasks.filter((el) => {
+        return el.taskDesc.includes(searchValue);
+    });
+    initTasks(filteredTasks);
+});
 
 
 tasksCheckboxes.forEach((el, index) => {
