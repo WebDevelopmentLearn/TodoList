@@ -8,38 +8,41 @@
     <script src="https://kit.fontawesome.com/5a495bdc39.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="todo_container">
-    <h1 id="dayName" class="text_500">Среда</h1>
-    <h2 id="dayPar" class="text_500">3 января</h2>
+<div class="todoContainer">
+    <h1 id="dayName" class="text500">Среда</h1>
+    <h2 id="dayPar" class="text500">3 января</h2>
     <form action="" id="searchContainer">
         <label for="searchInput" class="searchLabel">
-            <input id="searchInput" type="search" placeholder="Поиск"/>
+            <form>
+                <input id="searchInput" type="search" placeholder="Поиск" name="search"/>
+            </form>
             <img id="searchIcon" src="./assets/icons/search_icon.svg" alt="search_icon"/>
         </label>
     </form>
     <div class="todoCreate hidden">
-        <h2 class="text_500">Новая запись</h2>
+        <h2 class="text500">Новая запись</h2>
         <form id="newCase" action="">
-            <input id="taskDesc" class="text_400" type="text" placeholder="Описание"/>
-            <input id="taskDate" class="text_400" type="text" placeholder="Дата"/>
-            <input id="createTodoBtn" class="text_500" type="submit" value="Добавить"/>
-            <input id="clearTodoCreateInputs" class="text_500" type="reset" value="Очистить"/>
+            <input id="taskDesc" class="text400" type="text" placeholder="Описание"/>
+            <input id="taskDate" class="text400" type="text" placeholder="Дата"/>
+            <input id="createTodoBtn" class="text500" type="submit" value="Добавить"/>
+            <input id="clearTodoCreateInputs" class="text500" type="reset" value="Очистить"/>
         </form>
+
     </div>
-    <div class="todoContainer">
-        <h2 class="text_500">Список дел</h2>
+    <div class="tasksContainer">
+        <h2 class="text500">Список дел</h2>
         <div class="todoGroup">
             <div class="todoType">
                 <input id="allTasks" type="radio" name="radio" value="1" checked/>
-                <label class="text_500 selected" for="allTasks">Все</label>
+                <label class="text500 selected" for="allTasks">Все</label>
             </div>
             <div class="todoType">
                 <input id="notCompleted" type="radio" name="radio" value="2"/>
-                <label class="text_500" for="notCompleted">Активные</label>
+                <label class="text500" for="notCompleted">Активные</label>
             </div>
             <div class="todoType">
                 <input id="completed" type="radio" name="radio" value="3"/>
-                <label class="text_500" for="completed">Завершенные</label>
+                <label class="text500" for="completed">Завершенные</label>
             </div>
         </div>
         <div class="tasksList">
