@@ -182,7 +182,7 @@ function createTaskCard(obj) {
   datePar.classList.add("text400");
   descPar.classList.add("text400");
   taskInfoContainer.append(datePar, descPar);
-  taskContainer.append(checkBox, taskInfoContainer,  addTrashIcon());
+  taskContainer.append(checkBox, taskInfoContainer,  addTrashIcon(), addEditIcon());
   todoListContainer.append(taskContainer);
 }
 
@@ -192,21 +192,29 @@ function createTaskCard(obj) {
 // ================ УДАЛЕНИЕ ТАСКА [WIP] [НАЧАЛО] ====================
 
 function addTrashIcon() {
-  const icon = document.createElement("img");
-  icon.setAttribute("class", "trashIcon hidden");
-  icon.setAttribute("src", "./assets/icons/trash_icon.svg");
-  icon.addEventListener("click", (event) => {
+  const trashIcon = document.createElement("img");
+  trashIcon.setAttribute("class", "trashIcon hidden");
+  trashIcon.setAttribute("src", "./assets/icons/trash_icon.svg");
+  trashIcon.addEventListener("click", (event) => {
     const taskId = event.target.parentNode.id.split("_")[1];
     removeTask(taskId);
     updateTaskCard(taskId, allTasks, false);
     event.target.parentNode.remove();
   });
-  // console.log(icon);
-  //parentObj.append(icon);
-  return icon;
+  return trashIcon;
 }
 
+function changeElementType(element, newType) {
+    const newElement = document.createElement(newType);
+    newElement.innerHTML = element.innerHTML;
+    element.parentNode.replaceChild(newElement, element);
+    return newElement;
 
+}
+
+function getTaskById(taskId) {
+  return allTasks.find((el) => el.taskId === taskId);
+}
 /**
  * TODO: Дописать функционал удаления тасков и не забыть про вызов функции
  * Функция отвечает за отрисовку hover-эффекта на тасках и их удаления
@@ -218,21 +226,30 @@ function renderHoverAndRemoveTasks() {
   for (let i = 0; i < taskContainers.length; i++) {
     const taskContainer = taskContainers[i];
     const defaultBcgColor = taskContainer.style.backgroundColor;
-    addTrashIcon(taskContainer);
+    addTrashIcon();
+    addEditIcon();
 
     taskContainer.addEventListener("pointerover", () => {
       taskContainer.style.backgroundColor = "#e0d6e3";
       const trashIcon = taskContainer.querySelector(".trashIcon");
+      const editIcon = taskContainer.querySelector(".editIcon");
       if (trashIcon) {
         trashIcon.classList.remove("hidden");
+      }
+      if (editIcon) {
+        editIcon.classList.remove("hidden");
       }
     });
 
     taskContainer.addEventListener("pointerout", () => {
       taskContainer.style.backgroundColor = defaultBcgColor;
       const trashIcon = taskContainer.querySelector(".trashIcon");
+      const editIcon = taskContainer.querySelector(".editIcon");
       if (trashIcon) {
         trashIcon.classList.add("hidden");
+      }
+      if (editIcon) {
+        editIcon.classList.add("hidden");
       }
     });
   }
@@ -293,12 +310,6 @@ function initTasks(objArray) {
   })
 }
 
-let a = 5;
-function render(a) {
-  return a * 5;
-}
-
-console.log(render(a));
 /**
  * Данная функция переключает видимость тасков
  * @param type - тип отображения, где:
@@ -386,3 +397,61 @@ function getDayAndHour(array) {
   return array[2].split("T");
 }
 // ================ УТИЛИТАРНЫЕ ФУНКЦИИ [КОНЕЦ] ====================
+
+
+// ================ РЕДАКТИРОВАНИЕ ТАСКА [WIP] [НАЧАЛО] ====================
+function addEditIcon() {
+  const editIcon = document.createElement("img");
+  editIcon.setAttribute("class", "editIcon hidden");
+  editIcon.setAttribute("src", "./assets/icons/edit_icon.svg");
+  editIcon.addEventListener("click", (event) => {
+    editDate();
+  });
+  return editIcon;
+}
+
+function editDate() {
+  const date = document.querySelector(".taskInfo").children[0];
+  const content = date.textContent;
+  const newParagraphElement = changeElementType(date, "input");
+  newParagraphElement.value = content;
+  newParagraphElement.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      const taskId = event.target.parentNode.parentNode.id.split("_")[1];
+      const taskObj = getTaskById(Number(taskId));
+      taskObj.taskDate = event.target.value;
+      const oldPar = changeElementType(newParagraphElement, "p");
+      if (regDate.test(event.target.value)) {
+        oldPar.textContent = formatDate(event.target.value);
+        localStorage.setItem("allTasks", JSON.stringify(allTasks));
+      } else {
+        alert("Неверный формат даты");
+        oldPar.textContent = content;
+      }
+      editDesc();
+    }
+ 
+  });
+  // newParagraphElement.addEventListener("keydown", (event) => {
+  //   console.log(12512521);
+  //   if (event.key === "Enter") {
+  //     editDesc();
+  //   }
+  // })
+}
+
+function editDesc() {
+    const desc = document.querySelector(".taskInfo").children[1];
+    const content = desc.textContent;
+    const newParagraphElement = changeElementType(desc, "input");
+    newParagraphElement.value = content;
+    newParagraphElement.addEventListener("blur", (event) => {
+      const taskId = event.target.parentNode.parentNode.id.split("_")[1];
+      const taskObj = getTaskById(Number(taskId));
+      taskObj.taskDesc = event.target.value;
+      const oldPar = changeElementType(newParagraphElement, "p");
+      localStorage.setItem("allTasks", JSON.stringify(allTasks));
+    });
+}
+
+// ================ РЕДАКТИРОВАНИЕ ТАСКА [WIP] [КОНЕЦ] ====================
