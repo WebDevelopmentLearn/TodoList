@@ -1,3 +1,11 @@
+/** TODO-LIST
+ *  1. Реализовать функционал удаления тасков
+ *  2. Сделать адаптив под мобильные устройства
+ *  3. Исправить работу указания даты на мобильных устройствах
+ *  4. Добавить возможность редактирования тасков (когда-нибудь...)
+ *
+ */
+
 const regDate = /^\d{4,}-\d{2}-\d{2}T\d{2}:\d{2}$/;
 const currentDate = new Date();
 const dayOfWeek = currentDate.getDay();
@@ -9,25 +17,24 @@ let month = months[currentDate.getMonth()];
 dayName.textContent = days[dayOfWeek];
 
 // ================ ВЫВОД ТЕКУЩЕГО ВРЕМЕНИ В РЕАЛТАЙМЕ [НАЧАЛО] ====================
-const SHOW_TIME = true;
+
 function updateTime() {
-  const now = new Date()
-  currentHour = now.getHours();
-  currentMin = String(now.getMinutes()).padStart(2, '0');
-  day.textContent = `${now.getDate()} ${month} ${currentHour}:${currentMin}`;
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  return { hours, minutes };
 }
 
-if (SHOW_TIME) {
-  let currentHour = currentDate.getHours();
-  let currentMin = String(currentDate.getMinutes()).padStart(2, '0');
-  day.textContent = `${currentDate.getDate()} ${month} ${currentHour}:${currentMin}`;
-  window.onload = () => {
-    updateTime();
-    setInterval(updateTime, 60000);
-  };
-} else {
-  day.textContent = `${currentDate.getDate()} ${month}`;
+window.onload = () => {
+  updateClock();
+  setInterval(updateClock, 1000);
+};
+
+function updateClock() {
+  const { hours, minutes } = updateTime();
+  day.textContent = `${currentDate.getDate()} ${month} ${hours}:${minutes}`;
 }
+
 // ================ ВЫВОД ТЕКУЩЕГО ВРЕМЕНИ В РЕАЛТАЙМЕ [КОНЕЦ] ====================
 
 const searchInput = document.querySelector("#searchInput");
@@ -49,7 +56,7 @@ let id = allTasks.length !== 0 ? allTasks[allTasks.length - 1].taskId + 1 : 0;
 
 const tasksCheckboxes = document.querySelectorAll(".taskCheckbox");
 initTasks(allTasks);
-
+renderHoverAndRemoveTasks();
 
 // ================ ПОИСК [НАЧАЛО] ====================
 searchInput.addEventListener("input", (event) => {
@@ -58,6 +65,7 @@ searchInput.addEventListener("input", (event) => {
         return el.taskDesc.includes(searchValue);
     });
     initTasks(filteredTasks);
+  renderHoverAndRemoveTasks();
 });
 // ================ ПОИСК [КОНЕЦ] ====================
 
@@ -143,30 +151,38 @@ const createTask = (desc, date) => {
 }
 
 function createTaskCard(obj) {
-  const taskContainer = document.createElement("div");
-  taskContainer.id = "task_" + obj.taskId;
-  taskContainer.classList.add("taskContainer");
-  const datePar = document.createElement("p");
-  const descPar = document.createElement("p");
   const date = formatDate(obj.taskDate);
   if (date === "") return;
+  const taskContainer = document.createElement("div");
+  const taskInfoContainer = document.createElement("div");
+  const datePar = document.createElement("p");
+  const descPar = document.createElement("p");
+
   const checkBox = document.createElement("input");
-  checkBox.setAttribute("type", "checkbox");
-  checkBox.classList.add("taskCheckbox");
+  const list = [
+    {name: "type", value: "checkbox"},
+    {name: "name", value: "taskCheckBox"},
+    {name: "class", value: "taskCheckbox"}
+  ]
+  list.forEach((element) => {
+    checkBox.setAttribute(element.name, element.value);
+  })
   checkBox.checked = obj.isComplete;
   checkPars(datePar, descPar, checkBox.checked);
   checkBox.addEventListener("change", (event) => {
     updateTaskCard(obj, allTasks, event.target.checked);
     checkPars(getPar("date",event.target), getPar("desc",event.target), event.target.checked);
   });
-  const taskInfoContainer = document.createElement("div");
+ 
+  taskContainer.id = "task_" + obj.taskId;
+  taskContainer.classList.add("taskContainer");
   taskInfoContainer.classList.add("taskInfo");
   datePar.textContent = date;
   descPar.textContent = obj.taskDesc;
-  datePar.classList.add("text_400");
-  descPar.classList.add("text_400");
+  datePar.classList.add("text400");
+  descPar.classList.add("text400");
   taskInfoContainer.append(datePar, descPar);
-  taskContainer.append(checkBox, taskInfoContainer);
+  taskContainer.append(checkBox, taskInfoContainer,  addTrashIcon());
   todoListContainer.append(taskContainer);
 }
 
@@ -174,41 +190,63 @@ function createTaskCard(obj) {
 
 
 // ================ УДАЛЕНИЕ ТАСКА [WIP] [НАЧАЛО] ====================
+
+function addTrashIcon() {
+  const icon = document.createElement("img");
+  icon.setAttribute("class", "trashIcon hidden");
+  icon.setAttribute("src", "./assets/icons/trash_icon.svg");
+  icon.addEventListener("click", (event) => {
+    const taskId = event.target.parentNode.id.split("_")[1];
+    removeTask(taskId);
+    updateTaskCard(taskId, allTasks, false);
+    event.target.parentNode.remove();
+  });
+  // console.log(icon);
+  //parentObj.append(icon);
+  return icon;
+}
+
+
 /**
  * TODO: Дописать функционал удаления тасков и не забыть про вызов функции
  * Функция отвечает за отрисовку hover-эффекта на тасках и их удаления
  */
 function renderHoverAndRemoveTasks() {
+  // console.log(todoListContainer.children);
+  const taskContainers = todoListContainer.children;
 
-  for (let i = 0; i < todoListContainer.children.length; i++) {
-    const defaultBcgColor = todoListContainer.children[i].style.backgroundColor;
-    todoListContainer.children[i].addEventListener("pointerover", () => {
-      todoListContainer.children[i].style.backgroundColor = "#e0d6e3";
+  for (let i = 0; i < taskContainers.length; i++) {
+    const taskContainer = taskContainers[i];
+    const defaultBcgColor = taskContainer.style.backgroundColor;
+    addTrashIcon(taskContainer);
+
+    taskContainer.addEventListener("pointerover", () => {
+      taskContainer.style.backgroundColor = "#e0d6e3";
+      const trashIcon = taskContainer.querySelector(".trashIcon");
+      if (trashIcon) {
+        trashIcon.classList.remove("hidden");
+      }
     });
 
-    todoListContainer.children[i].addEventListener("pointerout", (event) => {
-      todoListContainer.children[i].style.backgroundColor = defaultBcgColor;
-    });
-    todoListContainer.children[i].addEventListener("click", () => {
-      //remove
-      const taskId = todoListContainer.children[i].id.split("_")[1];
-      console.log(taskId);
-        removeTask(taskId);
-        updateTaskCard(taskId, allTasks, false);
+    taskContainer.addEventListener("pointerout", () => {
+      taskContainer.style.backgroundColor = defaultBcgColor;
+      const trashIcon = taskContainer.querySelector(".trashIcon");
+      if (trashIcon) {
+        trashIcon.classList.add("hidden");
+      }
     });
   }
 }
 
+
 function removeTask(taskId) {
-    allTasks.forEach((el, index) => {
-      taskId = Number(taskId);
-      console.log(`el.taskId: ${el.taskId}, taskId: ${taskId} index: ${index} `);
-        if (el.taskId === taskId) {
-        allTasks.splice(index, 1);
-        localStorage.setItem("allTasks", JSON.stringify(allTasks));
-        }
-    });
-    
+  taskId = Number(taskId);
+  const taskIndex = allTasks.findIndex(el => el.taskId === taskId);
+
+  if (taskIndex !== -1) {
+    allTasks.splice(taskIndex, 1);
+    localStorage.setItem("allTasks", JSON.stringify(allTasks));
+  }
 }
 
 // ================ УДАЛЕНИЕ ТАСКА [WIP] [КОНЕЦ] ====================
@@ -255,7 +293,12 @@ function initTasks(objArray) {
   })
 }
 
+let a = 5;
+function render(a) {
+  return a * 5;
+}
 
+console.log(render(a));
 /**
  * Данная функция переключает видимость тасков
  * @param type - тип отображения, где:
@@ -282,6 +325,7 @@ function switchTaskVisibleType(type = "all") {
 
   }
   initTasks(newArray);
+  renderHoverAndRemoveTasks();
 }
 
 
