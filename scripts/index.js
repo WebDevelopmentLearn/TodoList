@@ -1,12 +1,9 @@
 /** TODO-LIST
- *  1. Реализовать функционал удаления тасков
- *  2. Сделать адаптив под мобильные устройства
- *  3. Исправить работу указания даты на мобильных устройствах
- *  4. Добавить возможность редактирования тасков (когда-нибудь...)
- *
+ *  1. Сделать адаптив под мобильные устройства
+ *  2. Исправить работу указания даты на мобильных устройствах
  */
 
-const regDate = /^\d{4,}-\d{2}-\d{2}T\d{2}:\d{2}$/;
+const newRegDate = /^\d{2}\.\d{2}\.\d{4}( \d{2}:\d{2})?$/;
 const currentDate = new Date();
 const dayOfWeek = currentDate.getDay();
 const days = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
@@ -107,13 +104,24 @@ todoTypes.forEach((el, id) => {
 // ================ ОБНОВЛЕНИЕ СОСТОЯНИЯ ТАСКОВ [КОНЕЦ] ====================
 
 // ================ ИЗМЕНЕНИЕ ТИПА ПОЛЯ С УКАЗАНИЕМ ДАТЫ [НАЧАЛО] ====================
-dateInput.addEventListener("focus", () => {
-  dateInput.setAttribute("type", "datetime-local");
+// dateInput.addEventListener("focus", () => {
+//   dateInput.setAttribute("type", "datetime-local");
+// });
+//
+// dateInput.addEventListener("blur", () => {
+//   dateInput.setAttribute("type", "text");
+// });
+
+dateInput.addEventListener("input", (event) => {
+    const value = event.target.value;
+  console.log(value);
+    if (newRegDate.test(value)) {
+      dateInput.style.backgroundColor = "rgba(161,255,153,0.24)";
+    } else {
+      dateInput.style.backgroundColor = "rgba(252,117,117,0.24)";
+    }
 });
 
-dateInput.addEventListener("blur", () => {
-  dateInput.setAttribute("type", "text");
-});
 
 // ================ ИЗМЕНЕНИЕ ТИПА ПОЛЯ С УКАЗАНИЕМ ДАТЫ [КОНЕЦ] ====================
 
@@ -140,6 +148,8 @@ const createTask = (desc, date) => {
   if (desc === "" || date === "") {
     alert("Поля Описание и Дата не должны быть пустыми!");
     return null;
+  } else if (!newRegDate.test(date)) {
+    alert("Неверный формат даты");
   } else {
     return {
       taskId: id++,
@@ -151,7 +161,7 @@ const createTask = (desc, date) => {
 }
 
 function createTaskCard(obj) {
-  const date = formatDate(obj.taskDate);
+  const date = obj.taskDate;
   if (date === "") return;
   const taskContainer = document.createElement("div");
   const taskInfoContainer = document.createElement("div");
@@ -184,6 +194,7 @@ function createTaskCard(obj) {
   taskInfoContainer.append(datePar, descPar);
   taskContainer.append(checkBox, taskInfoContainer,  addTrashIcon(), addEditIcon());
   todoListContainer.append(taskContainer);
+  renderHoverAndRemoveTasks();
 }
 
 // ================ СОЗДАНИЕ ТАСКА [КОНЕЦ] ====================
@@ -270,6 +281,68 @@ function removeTask(taskId) {
 
 
 
+// ================ РЕДАКТИРОВАНИЕ ТАСКА [WIP] [НАЧАЛО] ====================
+function addEditIcon() {
+  const editIcon = document.createElement("img");
+  editIcon.setAttribute("class", "editIcon hidden");
+  editIcon.setAttribute("src", "./assets/icons/edit_icon.svg");
+  editIcon.addEventListener("click", (event) => {
+    editDate(event);
+    editDesc(event);
+  });
+  return editIcon;
+}
+
+
+function editDate(ev) {
+  const taskId = ev.target.parentNode.id.split("_")[1];
+  const date = ev.target.parentNode.children[1].children[0];
+  // console.log(date);
+  const content = date.textContent;
+  const newParagraphElement = changeElementType(date, "input");
+  newParagraphElement.value = content;
+  newParagraphElement.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      const taskObj = getTaskById(Number(taskId));
+      taskObj.taskDate = event.target.value;
+      const oldPar = changeElementType(newParagraphElement, "p");
+      if (newRegDate.test(event.target.value)) {
+        oldPar.textContent = event.target.value;
+        localStorage.setItem("allTasks", JSON.stringify(allTasks));
+      } else {
+        alert("Неверный формат даты");
+        oldPar.textContent = content;
+      }
+    }
+  });
+}
+
+function editDesc(ev) {
+  // console.log(ev.target.parentNode.id.split("_")[1]);
+  const taskId = ev.target.parentNode.id.split("_")[1];
+  console.log(taskId);
+  const desc = ev.target.parentNode.children[1].children[1];
+  const content = desc.textContent;
+  const newParagraphElement = changeElementType(desc, "input");
+  newParagraphElement.value = content;
+  newParagraphElement.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      const taskId = event.target.parentNode.parentNode.id.split("_")[1];
+      const taskObj = getTaskById(Number(taskId));
+      taskObj.taskDesc = event.target.value;
+      const oldPar = changeElementType(newParagraphElement, "p");
+      const isChecked = getTaskById(Number(taskId)).isComplete;
+      oldPar.textContent = event.target.value;
+      updateTaskCard(taskObj, allTasks, isChecked);
+      localStorage.setItem("allTasks", JSON.stringify(allTasks));
+    }
+  });
+}
+
+
+// ================ РЕДАКТИРОВАНИЕ ТАСКА [WIP] [КОНЕЦ] ====================
+
+
 
 // ================ УТИЛИТАРНЫЕ ФУНКЦИИ [НАЧАЛО] ====================
 function checkPars(parDate, parDesc, isChecked) {
@@ -341,6 +414,7 @@ function switchTaskVisibleType(type = "all") {
 
 
 /**
+ * @deprecated
  * TODO: Переписать код
  * Форматрирует передаваемую в него дату и время(в формате string) в читаемый вид.
  * Пример: "2024-02-10T16:33" -> "10 Февраля, 16:33"
@@ -370,6 +444,7 @@ function formatDate(dateTimeStr) {
 }
 
 /**
+ * @deprecated
  * Здесь мы разделяем массивоподобный 'объект'(в данном случае String) на 2 элемента в месте, где находится символ ':'
  * @param {string} dateTimeStr - строка даты и времени в формате: "2024-02-10T16:33" -> "10 Февраля, 16:33"
  * @returns {Array} новый массив с 2 элементами даты и минут
@@ -379,6 +454,7 @@ function getDateAndMin(dateTimeStr) {
 }
 
 /**
+ * @deprecated
  * Здесь разделяем 1 элемент прошлого массива на 3 элемента, что соответствуют году, месяцу и дню
  * @param {Array} array - массив, в котором нам нужно провести раскол
  * @returns {Array} новый массив с 3 элементами года, месяца и дня
@@ -389,69 +465,13 @@ function getYearMonthAndDay(array) {
 
 
 /**
+ * @deprecated 
  * Здесь разделяем 3 элемент прошлого массива на 2 элемента, что соответствуют дню и часу
  * @param {Array} array - массив, в котором нам нужно провести раскол
  * @returns {Array} новый массив с 2 элементами дня и часа
+ 
  */
 function getDayAndHour(array) {
   return array[2].split("T");
 }
 // ================ УТИЛИТАРНЫЕ ФУНКЦИИ [КОНЕЦ] ====================
-
-
-// ================ РЕДАКТИРОВАНИЕ ТАСКА [WIP] [НАЧАЛО] ====================
-function addEditIcon() {
-  const editIcon = document.createElement("img");
-  editIcon.setAttribute("class", "editIcon hidden");
-  editIcon.setAttribute("src", "./assets/icons/edit_icon.svg");
-  editIcon.addEventListener("click", (event) => {
-    editDate();
-  });
-  return editIcon;
-}
-
-function editDate() {
-  const date = document.querySelector(".taskInfo").children[0];
-  const content = date.textContent;
-  const newParagraphElement = changeElementType(date, "input");
-  newParagraphElement.value = content;
-  newParagraphElement.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      const taskId = event.target.parentNode.parentNode.id.split("_")[1];
-      const taskObj = getTaskById(Number(taskId));
-      taskObj.taskDate = event.target.value;
-      const oldPar = changeElementType(newParagraphElement, "p");
-      if (regDate.test(event.target.value)) {
-        oldPar.textContent = formatDate(event.target.value);
-        localStorage.setItem("allTasks", JSON.stringify(allTasks));
-      } else {
-        alert("Неверный формат даты");
-        oldPar.textContent = content;
-      }
-      editDesc();
-    }
- 
-  });
-  // newParagraphElement.addEventListener("keydown", (event) => {
-  //   console.log(12512521);
-  //   if (event.key === "Enter") {
-  //     editDesc();
-  //   }
-  // })
-}
-
-function editDesc() {
-    const desc = document.querySelector(".taskInfo").children[1];
-    const content = desc.textContent;
-    const newParagraphElement = changeElementType(desc, "input");
-    newParagraphElement.value = content;
-    newParagraphElement.addEventListener("blur", (event) => {
-      const taskId = event.target.parentNode.parentNode.id.split("_")[1];
-      const taskObj = getTaskById(Number(taskId));
-      taskObj.taskDesc = event.target.value;
-      const oldPar = changeElementType(newParagraphElement, "p");
-      localStorage.setItem("allTasks", JSON.stringify(allTasks));
-    });
-}
-
-// ================ РЕДАКТИРОВАНИЕ ТАСКА [WIP] [КОНЕЦ] ====================
