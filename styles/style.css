@@ -283,9 +283,26 @@ html {
   right: 60px;
 }
 
-@media screen and (max-width: 768px) {
-  /*#createTask {*/
-  /*  width: 20%;*/
-  /*  height: 20%;*/
-  /*}*/
+@media screen and (max-width: 425px) {
+  .todoGroup {
+    flex-wrap: wrap;
+  }
+
+  .todoType {
+    width: 100%;
+  }
+
+  .todoGroup label {
+    border-radius: 16px;
+    margin: 4px 0 4px 0;
+    border-right: 1px solid #79747e;
+  }
+
+  .todoGroup .todoType:first-child label {
+    border-radius: 16px;
+  }
+
+  .todoGroup .todoType:last-child label {
+    border-radius: 16px;
+  }
 }
