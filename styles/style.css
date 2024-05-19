@@ -239,6 +239,7 @@ html {
   display: flex;
   align-items: center;
   gap: 10px;
+  position: relative;
 }
 
 .taskContainer p {
@@ -271,7 +272,7 @@ html {
   height: 20px;
   cursor: pointer;
   position: absolute;
-  right: 30px;
+  right: 20px;
 }
 
 .editIcon {

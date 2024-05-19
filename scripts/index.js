@@ -141,6 +141,7 @@ newTaskForm.addEventListener("submit", (event) => {
     allTasks.push(newTask);
     localStorage.setItem("allTasks", JSON.stringify(allTasks));
     createTaskCard(newTask);
+    alert(`Задача "${newTask.taskDesc}" успешно добавлена!`);
   }
 })
 
@@ -160,8 +161,21 @@ const createTask = (desc, date) => {
   }
 }
 
+function replaceMonth(date) {
+  const month = date.split(".")[1];
+  date = date.replace(month, months[month - 1]);
+  date = date.replace(".", " ");
+  date = date.replace(".", " ");
+
+  if (date.split(" ")[2] === String(currentDate.getFullYear())) {
+    date = date.split(" ").slice(0, 2).join(" ");
+  }
+  return date;
+}
+
+
 function createTaskCard(obj) {
-  const date = obj.taskDate;
+  let date = replaceMonth(obj.taskDate);
   if (date === "") return;
   const taskContainer = document.createElement("div");
   const taskInfoContainer = document.createElement("div");
@@ -297,18 +311,21 @@ function addEditIcon() {
 function editDate(ev) {
   const taskId = ev.target.parentNode.id.split("_")[1];
   const date = ev.target.parentNode.children[1].children[0];
-  // console.log(date);
-  const content = date.textContent;
+  const taskObj = getTaskById(Number(taskId));
+  const content = taskObj.taskDate;//date.textContent;
   const newParagraphElement = changeElementType(date, "input");
   newParagraphElement.value = content;
+  newParagraphElement.focus();
   newParagraphElement.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
-      const taskObj = getTaskById(Number(taskId));
-      taskObj.taskDate = event.target.value;
+     
       const oldPar = changeElementType(newParagraphElement, "p");
       if (newRegDate.test(event.target.value)) {
+        taskObj.taskDate = event.target.value;
         oldPar.textContent = event.target.value;
         localStorage.setItem("allTasks", JSON.stringify(allTasks));
+       
+        ev.target.parentNode.children[1].children[1].focus();
       } else {
         alert("Неверный формат даты");
         oldPar.textContent = content;
@@ -318,22 +335,20 @@ function editDate(ev) {
 }
 
 function editDesc(ev) {
-  // console.log(ev.target.parentNode.id.split("_")[1]);
   const taskId = ev.target.parentNode.id.split("_")[1];
-  console.log(taskId);
   const desc = ev.target.parentNode.children[1].children[1];
   const content = desc.textContent;
   const newParagraphElement = changeElementType(desc, "input");
   newParagraphElement.value = content;
   newParagraphElement.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
-      const taskId = event.target.parentNode.parentNode.id.split("_")[1];
       const taskObj = getTaskById(Number(taskId));
       taskObj.taskDesc = event.target.value;
       const oldPar = changeElementType(newParagraphElement, "p");
       const isChecked = getTaskById(Number(taskId)).isComplete;
       oldPar.textContent = event.target.value;
       updateTaskCard(taskObj, allTasks, isChecked);
+      checkPars(ev.target.parentNode.children[1].children[0], ev.target.parentNode.children[1].children[1], isChecked);
       localStorage.setItem("allTasks", JSON.stringify(allTasks));
     }
   });
@@ -377,7 +392,7 @@ function getPar(type, obj) {
  * @param objArray - массив объектов, которые нужно отобразить
  */
 function initTasks(objArray) {
-  todoListContainer.innerHTML = "";
+  todoListContainer.textContent = "";
   objArray.forEach((el) => {
     createTaskCard(el);
   })
