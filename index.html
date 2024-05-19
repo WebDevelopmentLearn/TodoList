@@ -52,6 +52,18 @@
     <div id="createTask">
         <img src="./assets/icons/create_icon.svg" alt="create_icon"/>
     </div>
+
+    <div class="editTaskContainer hiddenModal">
+        <img src="./assets/icons/drag_handle.svg" alt="drag_handle">
+        <form id="editTaskForm">
+            <input id="taskDescEdit" class="text400 taskInput" type="text" name="taskDescEdit" placeholder="Описание"/>
+            <input id="taskDateEdit" class="text400 taskInput" type="text" name="taskDateEdit" placeholder="Дата и время в формате: дд.мм.гггг чч:мм"/>
+            <input id="editTodoBtn" class="text500" type="button" name="editTodoBtn" value="Изменить"/>
+            <input id="deleteTodoBtn" class="text500" type="button" name="deleteTodoBtn" value="Удалить"/>
+        </form>
+
+<!--        <input id="clearTodoEditInputs" class="text500" name="clearTodoEditInputs" type="reset" value="Очистить"/>-->
+    </div>
 </div>
 </body>
 <script src="./scripts/index.js"></script>

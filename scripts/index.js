@@ -3,6 +3,7 @@
  *  2. Доработать функционал редактирования/удаления таска на мобильных устройствах
  */
 
+const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 const newRegDate = /^\d{2}\.\d{2}\.\d{4}( \d{2}:\d{2})?$/;
 const currentDate = new Date();
 const dayOfWeek = currentDate.getDay();
@@ -49,11 +50,19 @@ const todoListContainer = document.querySelector(".tasksList");
 const taskDeskInput = document.querySelector("#taskDesc");
 const taskDateInput = document.querySelector("#taskDate");
 const newTaskForm = document.querySelector("#newCase");
+
+const editTaskContainer = document.querySelector(".editTaskContainer");
+const editTaskForm = document.querySelector("#editTaskForm");
+const editTaskDesc = document.querySelector("#taskDescEdit");
+const editTaskDate = document.querySelector("#taskDateEdit");
+const editTaskBtn = document.querySelector("#editTodoBtn");
+const deleteTodoBtn = document.querySelector("#deleteTodoBtn");
+
 let id = allTasks.length !== 0 ? allTasks[allTasks.length - 1].taskId + 1 : 0;
 
 const tasksCheckboxes = document.querySelectorAll(".taskCheckbox");
 initTasks(allTasks);
-renderHoverAndRemoveTasks();
+// renderHoverAndRemoveTasks();
 
 // ================ ПОИСК [НАЧАЛО] ====================
 searchInput.addEventListener("input", (event) => {
@@ -62,7 +71,7 @@ searchInput.addEventListener("input", (event) => {
         return el.taskDesc.includes(searchValue);
     });
     initTasks(filteredTasks);
-  renderHoverAndRemoveTasks();
+  // renderHoverAndRemoveTasks();
 });
 // ================ ПОИСК [КОНЕЦ] ====================
 
@@ -173,7 +182,6 @@ function replaceMonth(date) {
   return date;
 }
 
-
 function createTaskCard(obj) {
   let date = replaceMonth(obj.taskDate);
   if (date === "") return;
@@ -206,9 +214,58 @@ function createTaskCard(obj) {
   datePar.classList.add("text400");
   descPar.classList.add("text400");
   taskInfoContainer.append(datePar, descPar);
-  taskContainer.append(checkBox, taskInfoContainer,  addTrashIcon(), addEditIcon());
+  taskContainer.append(checkBox, taskInfoContainer);
+
+  taskContainer.addEventListener("click", (event) => {
+    editTaskContainer.classList.toggle("hiddenModal");
+    if (!editTaskContainer.classList.contains("hiddenModal")) {
+      editTaskDesc.value = obj.taskDesc;
+      editTaskDate.value = obj.taskDate;
+      editTask(obj.taskDesc, obj.taskDate, taskContainer);
+      deleteTodoBtn.addEventListener("click", () => {
+        removeTask(obj.taskId);
+        updateTaskCard(obj, allTasks, obj.isComplete);
+        taskContainer.remove();
+        editTaskContainer.classList.toggle("hiddenModal");
+      });
+    }
+  });
+
+  const defaultBcgColor = taskContainer.style.backgroundColor;
+  const trashIcon = addTrashIcon();
+  const editIcon = addEditIcon();
+  taskContainer.appendChild(trashIcon);
+  taskContainer.appendChild(editIcon);
+  if (!isMobileDevice) {
+    taskContainer.addEventListener("pointerover", (ev) => {
+      taskContainer.style.backgroundColor = "#e0d6e3";
+      trashIcon.classList.remove("hidden");
+      editIcon.classList.remove("hidden");
+    });
+
+    taskContainer.addEventListener("pointerout", () => {
+      taskContainer.style.backgroundColor = defaultBcgColor;
+      trashIcon.classList.add("hidden");
+      editIcon.classList.add("hidden");
+    });
+  } else {
+    taskContainer.addEventListener("touchstart", () => {
+      taskContainer.style.backgroundColor = "#e0d6e3";
+      trashIcon.classList.remove("hidden");
+      editIcon.classList.remove("hidden");
+    });
+
+    taskContainer.addEventListener("touchend", () => {
+      setTimeout(() => {
+        console.log("Timeout");
+        taskContainer.style.backgroundColor = defaultBcgColor;
+        trashIcon.classList.add("hidden");
+        editIcon.classList.add("hidden");
+      }, 1000);
+    });
+  }
   todoListContainer.append(taskContainer);
-  renderHoverAndRemoveTasks();
+  // renderHoverAndRemoveTasks();
 }
 
 // ================ СОЗДАНИЕ ТАСКА [КОНЕЦ] ====================
@@ -244,49 +301,6 @@ function getTaskById(taskId) {
  * TODO: Дописать функционал удаления тасков и не забыть про вызов функции
  * Функция отвечает за отрисовку hover-эффекта на тасках и их удаления
  */
-function renderHoverAndRemoveTasks() {
-  const taskContainers = todoListContainer.children;
-  const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  for (let i = 0; i < taskContainers.length; i++) {
-    const taskContainer = taskContainers[i];
-    const defaultBcgColor = taskContainer.style.backgroundColor;
-    const trashIcon = addTrashIcon();
-    const editIcon = addEditIcon();
-
-    // Ensure icons are added to task container
-    taskContainer.appendChild(trashIcon);
-    taskContainer.appendChild(editIcon);
-
-    if (!isMobileDevice) {
-      taskContainer.addEventListener("pointerover", () => {
-        taskContainer.style.backgroundColor = "#e0d6e3";
-        trashIcon.classList.remove("hidden");
-        editIcon.classList.remove("hidden");
-      });
-
-      taskContainer.addEventListener("pointerout", () => {
-        taskContainer.style.backgroundColor = defaultBcgColor;
-        trashIcon.classList.add("hidden");
-        editIcon.classList.add("hidden");
-      });
-    } else {
-      taskContainer.addEventListener("touchstart", () => {
-        taskContainer.style.backgroundColor = "#e0d6e3";
-        trashIcon.classList.remove("hidden");
-        editIcon.classList.remove("hidden");
-      });
-
-      taskContainer.addEventListener("touchend", () => {
-        setTimeout(() => {
-          console.log("Timeout");
-          taskContainer.style.backgroundColor = defaultBcgColor;
-          trashIcon.classList.add("hidden");
-          editIcon.classList.add("hidden");
-        }, 1000);
-      });
-    }
-  }
-}
 
 function removeTask(taskId) {
   taskId = Number(taskId);
@@ -314,6 +328,22 @@ function addEditIcon() {
   return editIcon;
 }
 
+
+function editTask(desc, date, obj) {
+  editTaskDesc.value = desc;
+  editTaskDate.value = date;
+  editTaskBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    obj.children[1].children[0].textContent = editTaskDate.value;
+    obj.children[1].children[1].textContent = editTaskDesc.value;
+    const taskId = obj.id.split("_")[1];
+    const taskObj = getTaskById(Number(taskId));
+    taskObj.taskDesc = editTaskDesc.value;
+    taskObj.taskDate = editTaskDate.value;
+    localStorage.setItem("allTasks", JSON.stringify(allTasks));
+    updateTaskCard(taskObj, allTasks, taskObj.isComplete);
+  });
+}
 
 function editDate(ev) {
   const taskId = ev.target.parentNode.id.split("_")[1];
@@ -431,7 +461,7 @@ function switchTaskVisibleType(type = "all") {
 
   }
   initTasks(newArray);
-  renderHoverAndRemoveTasks();
+  // renderHoverAndRemoveTasks();
 }
 
 
