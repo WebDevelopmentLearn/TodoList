@@ -216,20 +216,7 @@ function createTaskCard(obj) {
   taskInfoContainer.append(datePar, descPar);
   taskContainer.append(checkBox, taskInfoContainer);
 
-  taskContainer.addEventListener("click", (event) => {
-    editTaskContainer.classList.toggle("hiddenModal");
-    if (!editTaskContainer.classList.contains("hiddenModal")) {
-      editTaskDesc.value = obj.taskDesc;
-      editTaskDate.value = obj.taskDate;
-      editTask(obj.taskDesc, obj.taskDate, taskContainer);
-      deleteTodoBtn.addEventListener("click", () => {
-        removeTask(obj.taskId);
-        updateTaskCard(obj, allTasks, obj.isComplete);
-        taskContainer.remove();
-        editTaskContainer.classList.toggle("hiddenModal");
-      });
-    }
-  });
+
 
   const defaultBcgColor = taskContainer.style.backgroundColor;
   const trashIcon = addTrashIcon();
@@ -249,19 +236,20 @@ function createTaskCard(obj) {
       editIcon.classList.add("hidden");
     });
   } else {
-    taskContainer.addEventListener("touchstart", () => {
-      taskContainer.style.backgroundColor = "#e0d6e3";
-      trashIcon.classList.remove("hidden");
-      editIcon.classList.remove("hidden");
-    });
+    taskContainer.addEventListener("click", (event) => {
+      editTaskContainer.classList.toggle("hiddenModal");
+      if (!editTaskContainer.classList.contains("hiddenModal")) {
+        editTaskDesc.value = obj.taskDesc;
+        editTaskDate.value = obj.taskDate;
+        editTask(obj.taskDesc, obj.taskDate, taskContainer);
+        deleteTodoBtn.addEventListener("click", () => {
+          removeTask(obj.taskId);
+          updateTaskCard(obj, allTasks, obj.isComplete);
+          taskContainer.remove();
+          editTaskContainer.classList.toggle("hiddenModal");
+        });
 
-    taskContainer.addEventListener("touchend", () => {
-      setTimeout(() => {
-        console.log("Timeout");
-        taskContainer.style.backgroundColor = defaultBcgColor;
-        trashIcon.classList.add("hidden");
-        editIcon.classList.add("hidden");
-      }, 1000);
+      }
     });
   }
   todoListContainer.append(taskContainer);
@@ -342,6 +330,7 @@ function editTask(desc, date, obj) {
     taskObj.taskDate = editTaskDate.value;
     localStorage.setItem("allTasks", JSON.stringify(allTasks));
     updateTaskCard(taskObj, allTasks, taskObj.isComplete);
+    editTaskContainer.classList.toggle("hiddenModal");
   });
 }
 
@@ -465,65 +454,4 @@ function switchTaskVisibleType(type = "all") {
 }
 
 
-/**
- * @deprecated
- * TODO: Переписать код
- * Форматрирует передаваемую в него дату и время(в формате string) в читаемый вид.
- * Пример: "2024-02-10T16:33" -> "10 Февраля, 16:33"
- * @param {string} dateTimeStr - дата и время
- * @returns {string} - отформатированное дата и время
- */
-function formatDate(dateTimeStr) {
-  if (!regDate.test(dateTimeStr)) {
-    alert("Неверно указан формат времени");
-    return "";
-  }
-  const dateAndMin = getDateAndMin(dateTimeStr);
-  const min = dateAndMin[1];
-  const yearMonthAndDay = getYearMonthAndDay(dateAndMin);
-  const dayAndHour = getDayAndHour(yearMonthAndDay);
-  const monthNum = Number(yearMonthAndDay[1] -1);
-  const monthStrn = months[monthNum];
-  const currentYear = String(currentDate.getFullYear());
-  const year = yearMonthAndDay[0];
-  let newDate;
-  if (currentYear === year) {
-    newDate = `${dayAndHour[0]} ${monthStrn}, ${dayAndHour[1]}:${min}`;
-  } else {
-    newDate = `${dayAndHour[0]} ${monthStrn} ${year}, ${dayAndHour[1]}:${min}`;
-  }
-  return newDate;
-}
-
-/**
- * @deprecated
- * Здесь мы разделяем массивоподобный 'объект'(в данном случае String) на 2 элемента в месте, где находится символ ':'
- * @param {string} dateTimeStr - строка даты и времени в формате: "2024-02-10T16:33" -> "10 Февраля, 16:33"
- * @returns {Array} новый массив с 2 элементами даты и минут
- */
-function getDateAndMin(dateTimeStr) {
-  return dateTimeStr.split(":");
-}
-
-/**
- * @deprecated
- * Здесь разделяем 1 элемент прошлого массива на 3 элемента, что соответствуют году, месяцу и дню
- * @param {Array} array - массив, в котором нам нужно провести раскол
- * @returns {Array} новый массив с 3 элементами года, месяца и дня
- */
-function getYearMonthAndDay(array) {
-  return array[0].split("-");
-}
-
-
-/**
- * @deprecated 
- * Здесь разделяем 3 элемент прошлого массива на 2 элемента, что соответствуют дню и часу
- * @param {Array} array - массив, в котором нам нужно провести раскол
- * @returns {Array} новый массив с 2 элементами дня и часа
- 
- */
-function getDayAndHour(array) {
-  return array[2].split("T");
-}
 // ================ УТИЛИТАРНЫЕ ФУНКЦИИ [КОНЕЦ] ====================
