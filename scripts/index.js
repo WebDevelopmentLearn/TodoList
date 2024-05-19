@@ -245,68 +245,48 @@ function getTaskById(taskId) {
  * Функция отвечает за отрисовку hover-эффекта на тасках и их удаления
  */
 function renderHoverAndRemoveTasks() {
-  // console.log(todoListContainer.children);
   const taskContainers = todoListContainer.children;
-
+  const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   for (let i = 0; i < taskContainers.length; i++) {
     const taskContainer = taskContainers[i];
     const defaultBcgColor = taskContainer.style.backgroundColor;
-    addTrashIcon();
-    addEditIcon();
+    const trashIcon = addTrashIcon();
+    const editIcon = addEditIcon();
 
-    taskContainer.addEventListener("pointerover", () => {
-      taskContainer.style.backgroundColor = "#e0d6e3";
-      const trashIcon = taskContainer.querySelector(".trashIcon");
-      const editIcon = taskContainer.querySelector(".editIcon");
-      if (trashIcon) {
+    // Ensure icons are added to task container
+    taskContainer.appendChild(trashIcon);
+    taskContainer.appendChild(editIcon);
+
+    if (!isMobileDevice) {
+      taskContainer.addEventListener("pointerover", () => {
+        taskContainer.style.backgroundColor = "#e0d6e3";
         trashIcon.classList.remove("hidden");
-      }
-      if (editIcon) {
         editIcon.classList.remove("hidden");
-      }
-    });
+      });
 
-    taskContainer.addEventListener("pointerout", () => {
-      taskContainer.style.backgroundColor = defaultBcgColor;
-      const trashIcon = taskContainer.querySelector(".trashIcon");
-      const editIcon = taskContainer.querySelector(".editIcon");
-      if (trashIcon) {
-        trashIcon.classList.add("hidden");
-      }
-      if (editIcon) {
-        editIcon.classList.add("hidden");
-      }
-    });
-
-
-    taskContainer.addEventListener("touchstart", () => {
-      taskContainer.style.backgroundColor = "#e0d6e3";
-      const trashIcon = taskContainer.querySelector(".trashIcon");
-      const editIcon = taskContainer.querySelector(".editIcon");
-      if (trashIcon) {
-        trashIcon.classList.remove("hidden");
-      }
-      if (editIcon) {
-        editIcon.classList.remove("hidden");
-      }
-    });
-
-    taskContainer.addEventListener("touchend", () => {
-      setTimeout(() => {
+      taskContainer.addEventListener("pointerout", () => {
         taskContainer.style.backgroundColor = defaultBcgColor;
-        const trashIcon = taskContainer.querySelector(".trashIcon");
-        const editIcon = taskContainer.querySelector(".editIcon");
-        if (trashIcon) {
+        trashIcon.classList.add("hidden");
+        editIcon.classList.add("hidden");
+      });
+    } else {
+      taskContainer.addEventListener("touchstart", () => {
+        taskContainer.style.backgroundColor = "#e0d6e3";
+        trashIcon.classList.remove("hidden");
+        editIcon.classList.remove("hidden");
+      });
+
+      taskContainer.addEventListener("touchend", () => {
+        setTimeout(() => {
+          console.log("Timeout");
+          taskContainer.style.backgroundColor = defaultBcgColor;
           trashIcon.classList.add("hidden");
-        }
-        if (editIcon) {
           editIcon.classList.add("hidden");
-        }
-      }, 3000); // Hide the icon after 3 seconds
-    });
+        }, 1000);
+      });
+    }
   }
 }
-
 
 function removeTask(taskId) {
   taskId = Number(taskId);
