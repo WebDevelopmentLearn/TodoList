@@ -51,6 +51,7 @@ const taskDeskInput = document.querySelector("#taskDesc");
 const taskDateInput = document.querySelector("#taskDate");
 const newTaskForm = document.querySelector("#newCase");
 
+const overlay = document.querySelector('.overlay');
 const editTaskContainer = document.querySelector(".editTaskContainer");
 const editTaskForm = document.querySelector("#editTaskForm");
 const editTaskDesc = document.querySelector("#taskDescEdit");
@@ -237,16 +238,26 @@ function createTaskCard(obj) {
     });
   } else {
     taskContainer.addEventListener("click", (event) => {
+
       editTaskContainer.classList.toggle("hiddenModal");
+      overlay.classList.toggle("hiddenModal");
       if (!editTaskContainer.classList.contains("hiddenModal")) {
+        overlay.addEventListener("click", (event) => {
+          if (!(editTaskContainer.classList.contains("hiddenModal")) || (!overlay.classList.contains("hiddenModal"))){
+            editTaskContainer.classList.toggle("hiddenModal");
+            overlay.classList.toggle("hiddenModal");
+          }
+        });
         editTaskDesc.value = obj.taskDesc;
         editTaskDate.value = obj.taskDate;
         editTask(obj.taskDesc, obj.taskDate, taskContainer);
+
         deleteTodoBtn.addEventListener("click", () => {
           removeTask(obj.taskId);
           updateTaskCard(obj, allTasks, obj.isComplete);
           taskContainer.remove();
           editTaskContainer.classList.toggle("hiddenModal");
+          overlay.classList.toggle("hiddenModal");
         });
 
       }
@@ -331,6 +342,7 @@ function editTask(desc, date, obj) {
     localStorage.setItem("allTasks", JSON.stringify(allTasks));
     updateTaskCard(taskObj, allTasks, taskObj.isComplete);
     editTaskContainer.classList.toggle("hiddenModal");
+    overlay.classList.toggle("hiddenModal");
   });
 }
 
