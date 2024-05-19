@@ -206,7 +206,6 @@ function createTaskCard(obj) {
     updateTaskCard(obj, allTasks, event.target.checked);
     checkPars(getPar("date",event.target), getPar("desc",event.target), event.target.checked);
   });
- 
   taskContainer.id = "task_" + obj.taskId;
   taskContainer.classList.add("taskContainer");
   taskInfoContainer.classList.add("taskInfo");
@@ -216,9 +215,6 @@ function createTaskCard(obj) {
   descPar.classList.add("text400");
   taskInfoContainer.append(datePar, descPar);
   taskContainer.append(checkBox, taskInfoContainer);
-
-
-
   const defaultBcgColor = taskContainer.style.backgroundColor;
   const trashIcon = addTrashIcon();
   const editIcon = addEditIcon();
@@ -238,33 +234,36 @@ function createTaskCard(obj) {
     });
   } else {
     taskContainer.addEventListener("click", (event) => {
+      console.log(event.target);
+      if (event.currentTarget === taskContainer) {
+        editTaskContainer.classList.toggle("hiddenModal");
+        overlay.classList.toggle("hiddenModal");
+        if (!editTaskContainer.classList.contains("hiddenModal")) {
+          overlay.addEventListener("click", (event) => {
+            console.log(event.target);
+            if (event.currentTarget === overlay) {
+              if (!(editTaskContainer.classList.contains("hiddenModal")) || (!overlay.classList.contains("hiddenModal"))) {
+                editTaskContainer.classList.toggle("hiddenModal");
+                overlay.classList.toggle("hiddenModal");
+              }
+            }
+          });
+          editTaskDesc.value = obj.taskDesc;
+          editTaskDate.value = obj.taskDate;
+          editTask(obj.taskDesc, obj.taskDate, taskContainer);
 
-      editTaskContainer.classList.toggle("hiddenModal");
-      overlay.classList.toggle("hiddenModal");
-      if (!editTaskContainer.classList.contains("hiddenModal")) {
-        overlay.addEventListener("click", (event) => {
-          if (!(editTaskContainer.classList.contains("hiddenModal")) || (!overlay.classList.contains("hiddenModal"))){
+          deleteTodoBtn.addEventListener("click", () => {
+            removeTask(obj.taskId);
+            updateTaskCard(obj, allTasks, obj.isComplete);
+            taskContainer.remove();
             editTaskContainer.classList.toggle("hiddenModal");
             overlay.classList.toggle("hiddenModal");
-          }
-        });
-        editTaskDesc.value = obj.taskDesc;
-        editTaskDate.value = obj.taskDate;
-        editTask(obj.taskDesc, obj.taskDate, taskContainer);
-
-        deleteTodoBtn.addEventListener("click", () => {
-          removeTask(obj.taskId);
-          updateTaskCard(obj, allTasks, obj.isComplete);
-          taskContainer.remove();
-          editTaskContainer.classList.toggle("hiddenModal");
-          overlay.classList.toggle("hiddenModal");
-        });
-
+          });
+        }
       }
     });
   }
   todoListContainer.append(taskContainer);
-  // renderHoverAndRemoveTasks();
 }
 
 // ================ СОЗДАНИЕ ТАСКА [КОНЕЦ] ====================
@@ -300,7 +299,6 @@ function getTaskById(taskId) {
  * TODO: Дописать функционал удаления тасков и не забыть про вызов функции
  * Функция отвечает за отрисовку hover-эффекта на тасках и их удаления
  */
-
 function removeTask(taskId) {
   taskId = Number(taskId);
   const taskIndex = allTasks.findIndex(el => el.taskId === taskId);
@@ -332,6 +330,7 @@ function editTask(desc, date, obj) {
   editTaskDesc.value = desc;
   editTaskDate.value = date;
   editTaskBtn.addEventListener("click", (event) => {
+    
     event.preventDefault();
     obj.children[1].children[0].textContent = editTaskDate.value;
     obj.children[1].children[1].textContent = editTaskDesc.value;
@@ -356,13 +355,11 @@ function editDate(ev) {
   newParagraphElement.focus();
   newParagraphElement.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
-     
       const oldPar = changeElementType(newParagraphElement, "p");
       if (newRegDate.test(event.target.value)) {
         taskObj.taskDate = event.target.value;
         oldPar.textContent = event.target.value;
         localStorage.setItem("allTasks", JSON.stringify(allTasks));
-       
         ev.target.parentNode.children[1].children[1].focus();
       } else {
         alert("Неверный формат даты");
@@ -459,10 +456,8 @@ function switchTaskVisibleType(type = "all") {
     default:
       newArray = allTasks;
       break;
-
   }
   initTasks(newArray);
-  // renderHoverAndRemoveTasks();
 }
 
 
