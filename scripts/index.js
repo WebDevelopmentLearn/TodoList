@@ -277,6 +277,33 @@ function renderHoverAndRemoveTasks() {
         editIcon.classList.add("hidden");
       }
     });
+
+
+    taskContainer.addEventListener("touchstart", () => {
+      taskContainer.style.backgroundColor = "#e0d6e3";
+      const trashIcon = taskContainer.querySelector(".trashIcon");
+      const editIcon = taskContainer.querySelector(".editIcon");
+      if (trashIcon) {
+        trashIcon.classList.remove("hidden");
+      }
+      if (editIcon) {
+        editIcon.classList.remove("hidden");
+      }
+    });
+
+    taskContainer.addEventListener("touchend", () => {
+      setTimeout(() => {
+        taskContainer.style.backgroundColor = defaultBcgColor;
+        const trashIcon = taskContainer.querySelector(".trashIcon");
+        const editIcon = taskContainer.querySelector(".editIcon");
+        if (trashIcon) {
+          trashIcon.classList.add("hidden");
+        }
+        if (editIcon) {
+          editIcon.classList.add("hidden");
+        }
+      }, 3000); // Hide the icon after 3 seconds
+    });
   }
 }
 

@@ -242,9 +242,16 @@ html {
   position: relative;
 }
 
-.taskContainer p {
+.taskInfo {
+  width: 100%;
+  display: flex;
+  gap: 5px;
+}
+
+.taskInfo p {
   font-size: 1.6rem;
-  max-width: 90vw;
+  width: 70%;
+  word-break: break-word;
 }
 
 .taskContainer > input {
@@ -284,25 +291,25 @@ html {
 }
 
 @media screen and (max-width: 425px) {
-  .todoGroup {
-    flex-wrap: wrap;
-  }
+  /*.todoGroup {*/
+  /*  flex-wrap: wrap;*/
+  /*}*/
 
-  .todoType {
-    width: 100%;
-  }
+  /*.todoType {*/
+  /*  width: 100%;*/
+  /*}*/
 
-  .todoGroup label {
-    border-radius: 16px;
-    margin: 4px 0 4px 0;
-    border-right: 1px solid #79747e;
-  }
+  /*.todoGroup label {*/
+  /*  border-radius: 16px;*/
+  /*  margin: 4px 0 4px 0;*/
+  /*  border-right: 1px solid #79747e;*/
+  /*}*/
 
-  .todoGroup .todoType:first-child label {
-    border-radius: 16px;
-  }
+  /*.todoGroup .todoType:first-child label {*/
+  /*  border-radius: 16px;*/
+  /*}*/
 
-  .todoGroup .todoType:last-child label {
-    border-radius: 16px;
-  }
+  /*.todoGroup .todoType:last-child label {*/
+  /*  border-radius: 16px;*/
+  /*}*/
 }
