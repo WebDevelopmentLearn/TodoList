@@ -1,7 +1,13 @@
 /** TODO-LIST
- *  1. Исправить закрытия последнего таска кнопкой
- *  2. Доработать функционал редактирования/удаления таска на мобильных устройствах
+ *  1. Сделать обновление формата времени при редактировании тасков
+ *  2. Придумать что-то с кнопкой создания таска. Если тасков много, то кнопка перекрывает последний таск
  */
+
+/**
+ * Sources: https://github.com/WebDevelopmentLearn/TodoList
+ * Website: https://webdevelopmentlearn.github.io/TodoList/
+ */
+
 
 const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 const newRegDate = /^\d{2}\.\d{2}\.\d{4}( \d{2}:\d{2})?$/;
@@ -116,7 +122,7 @@ todoTypes.forEach((el, id) => {
 // ================ ИЗМЕНЕНИЕ ТИПА ПОЛЯ С УКАЗАНИЕМ ДАТЫ [НАЧАЛО] ====================
 dateInput.addEventListener("input", (event) => {
     const value = event.target.value;
-  console.log(value);
+  // console.log(value);
     if (newRegDate.test(value)) {
       dateInput.style.backgroundColor = "#A1FF993D";
     } else {
@@ -222,6 +228,7 @@ function createTaskCard(obj) {
 
 // ================ СОЗДАНИЕ ТАСКА [КОНЕЦ] ====================
 
+// ================ СОБЫТИЯ, СВЯЗАННЫЕ С РЕДАКТИРОВАНИЕМ/УДАЛЕНИЕМ ТАСКОВ [НАЧАЛО] ====================
 function handlePointerEvents(taskContainer, trashIcon, editIcon, defaultBcgColor) {
   taskContainer.addEventListener("pointerover", (ev) => {
     taskContainer.style.backgroundColor = "#e0d6e3";
@@ -281,6 +288,9 @@ function handleDeleteTodoBtn(targetContainer, obj) {
     overlay.classList.toggle("hiddenModal");
   });
 }
+
+// ================ СОБЫТИЯ, СВЯЗАННЫЕ С РЕДАКТИРОВАНИЕМ/УДАЛЕНИЕМ ТАСКОВ [КОНЕЦ] ====================
+
 
 // ================ УДАЛЕНИЕ ТАСКА [WIP] [НАЧАЛО] ====================
 
