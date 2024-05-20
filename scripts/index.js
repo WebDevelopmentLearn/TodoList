@@ -56,7 +56,7 @@ const editTaskContainer = document.querySelector(".editTaskContainer");
 const editTaskForm = document.querySelector("#editTaskForm");
 const editTaskDesc = document.querySelector("#taskDescEdit");
 const editTaskDate = document.querySelector("#taskDateEdit");
-const editTaskBtn = document.querySelector("#editTodoBtn");
+let editTaskBtn = document.querySelector("#editTodoBtn");
 const deleteTodoBtn = document.querySelector("#deleteTodoBtn");
 
 let id = allTasks.length !== 0 ? allTasks[allTasks.length - 1].taskId + 1 : 0;
@@ -114,21 +114,13 @@ todoTypes.forEach((el, id) => {
 // ================ ОБНОВЛЕНИЕ СОСТОЯНИЯ ТАСКОВ [КОНЕЦ] ====================
 
 // ================ ИЗМЕНЕНИЕ ТИПА ПОЛЯ С УКАЗАНИЕМ ДАТЫ [НАЧАЛО] ====================
-// dateInput.addEventListener("focus", () => {
-//   dateInput.setAttribute("type", "datetime-local");
-// });
-//
-// dateInput.addEventListener("blur", () => {
-//   dateInput.setAttribute("type", "text");
-// });
-
 dateInput.addEventListener("input", (event) => {
     const value = event.target.value;
   console.log(value);
     if (newRegDate.test(value)) {
-      dateInput.style.backgroundColor = "rgba(161,255,153,0.24)";
+      dateInput.style.backgroundColor = "#A1FF993D";
     } else {
-      dateInput.style.backgroundColor = "rgba(252,117,117,0.24)";
+      dateInput.style.backgroundColor = "#FC75753D";
     }
 });
 
@@ -221,53 +213,74 @@ function createTaskCard(obj) {
   taskContainer.appendChild(trashIcon);
   taskContainer.appendChild(editIcon);
   if (!isMobileDevice) {
-    taskContainer.addEventListener("pointerover", (ev) => {
-      taskContainer.style.backgroundColor = "#e0d6e3";
-      trashIcon.classList.remove("hidden");
-      editIcon.classList.remove("hidden");
-    });
-
-    taskContainer.addEventListener("pointerout", () => {
-      taskContainer.style.backgroundColor = defaultBcgColor;
-      trashIcon.classList.add("hidden");
-      editIcon.classList.add("hidden");
-    });
+    handlePointerEvents(taskContainer, trashIcon, editIcon, defaultBcgColor);
   } else {
-    taskContainer.addEventListener("click", (event) => {
-      console.log(event.target);
-      if (event.currentTarget === taskContainer) {
-        editTaskContainer.classList.toggle("hiddenModal");
-        overlay.classList.toggle("hiddenModal");
-        if (!editTaskContainer.classList.contains("hiddenModal")) {
-          overlay.addEventListener("click", (event) => {
-            console.log(event.target);
-            if (event.currentTarget === overlay) {
-              if (!(editTaskContainer.classList.contains("hiddenModal")) || (!overlay.classList.contains("hiddenModal"))) {
-                editTaskContainer.classList.toggle("hiddenModal");
-                overlay.classList.toggle("hiddenModal");
-              }
-            }
-          });
-          editTaskDesc.value = obj.taskDesc;
-          editTaskDate.value = obj.taskDate;
-          editTask(obj.taskDesc, obj.taskDate, taskContainer);
-
-          deleteTodoBtn.addEventListener("click", () => {
-            removeTask(obj.taskId);
-            updateTaskCard(obj, allTasks, obj.isComplete);
-            taskContainer.remove();
-            editTaskContainer.classList.toggle("hiddenModal");
-            overlay.classList.toggle("hiddenModal");
-          });
-        }
-      }
-    });
+    handleModal(taskContainer, obj);
   }
   todoListContainer.append(taskContainer);
 }
 
 // ================ СОЗДАНИЕ ТАСКА [КОНЕЦ] ====================
 
+function handlePointerEvents(taskContainer, trashIcon, editIcon, defaultBcgColor) {
+  taskContainer.addEventListener("pointerover", (ev) => {
+    taskContainer.style.backgroundColor = "#e0d6e3";
+    trashIcon.classList.remove("hidden");
+    editIcon.classList.remove("hidden");
+  });
+
+  taskContainer.addEventListener("pointerout", () => {
+    taskContainer.style.backgroundColor = defaultBcgColor;
+    trashIcon.classList.add("hidden");
+    editIcon.classList.add("hidden");
+  });
+}
+
+function handleModal(targetContainer, obj) {
+  targetContainer.addEventListener("click", (event) => {
+    if (event.target.classList.contains("taskCheckbox")) {
+      event.stopPropagation();
+    } else if (event.currentTarget === targetContainer) {
+      editTaskContainer.classList.toggle("hiddenModal");
+      overlay.classList.toggle("hiddenModal");
+      if (!editTaskContainer.classList.contains("hiddenModal")) {
+        handleOverlay();
+        // editTaskDesc.value = obj.taskDesc;
+        // editTaskDate.value = obj.taskDate;
+        editTask(obj.taskDesc, obj.taskDate, targetContainer);
+        handleDeleteTodoBtn(targetContainer, obj);
+
+      }
+    }
+  });
+}
+
+function handleOverlay() {
+  overlay.addEventListener("click", (event) => {
+    // console.log(event.target);
+    if (event.currentTarget === overlay) {
+      if (!(editTaskContainer.classList.contains("hiddenModal")) || (!overlay.classList.contains("hiddenModal"))) {
+        editTaskContainer.classList.toggle("hiddenModal");
+        overlay.classList.toggle("hiddenModal");
+      }
+    }
+  });
+}
+
+/**
+ * Функция обрабатывает нажатие на кнопку удаления таска
+ * @param targetContainer - контейнер, в котором находится таск
+ * @param obj - объект таска
+ */
+function handleDeleteTodoBtn(targetContainer, obj) {
+  deleteTodoBtn.addEventListener("click", () => {
+    removeTask(obj.taskId);
+    updateTaskCard(obj, allTasks, obj.isComplete);
+    targetContainer.remove();
+    editTaskContainer.classList.toggle("hiddenModal");
+    overlay.classList.toggle("hiddenModal");
+  });
+}
 
 // ================ УДАЛЕНИЕ ТАСКА [WIP] [НАЧАЛО] ====================
 
@@ -284,20 +297,24 @@ function addTrashIcon() {
   return trashIcon;
 }
 
+/**
+ * Функция заменяет тип элемента на новый
+ * @param element - элемент, который нужно заменить
+ * @param newType - новый тип элемента
+ * @returns {HTMLElement} - новый элемент
+ */
 function changeElementType(element, newType) {
     const newElement = document.createElement(newType);
     newElement.innerHTML = element.innerHTML;
     element.parentNode.replaceChild(newElement, element);
     return newElement;
-
 }
 
 function getTaskById(taskId) {
   return allTasks.find((el) => el.taskId === taskId);
 }
 /**
- * TODO: Дописать функционал удаления тасков и не забыть про вызов функции
- * Функция отвечает за отрисовку hover-эффекта на тасках и их удаления
+ * Функция удаляет таск из массива объектов
  */
 function removeTask(taskId) {
   taskId = Number(taskId);
@@ -314,23 +331,16 @@ function removeTask(taskId) {
 
 
 // ================ РЕДАКТИРОВАНИЕ ТАСКА [WIP] [НАЧАЛО] ====================
-function addEditIcon() {
-  const editIcon = document.createElement("img");
-  editIcon.setAttribute("class", "editIcon hidden");
-  editIcon.setAttribute("src", "./assets/icons/edit_icon.svg");
-  editIcon.addEventListener("click", (event) => {
-    editDate(event);
-    editDesc(event);
-  });
-  return editIcon;
-}
 
 
+// ======== MOBILE [НАЧАЛО] ============
 function editTask(desc, date, obj) {
   editTaskDesc.value = desc;
   editTaskDate.value = date;
-  editTaskBtn.addEventListener("click", (event) => {
-    
+  const newEditTaskBtn = editTaskBtn.cloneNode(true);
+  editTaskBtn.parentNode.replaceChild(newEditTaskBtn, editTaskBtn);
+
+  newEditTaskBtn.addEventListener("click", (event) => {
     event.preventDefault();
     obj.children[1].children[0].textContent = editTaskDate.value;
     obj.children[1].children[1].textContent = editTaskDesc.value;
@@ -343,6 +353,21 @@ function editTask(desc, date, obj) {
     editTaskContainer.classList.toggle("hiddenModal");
     overlay.classList.toggle("hiddenModal");
   });
+  editTaskBtn = newEditTaskBtn;
+}
+
+// ======== MOBILE [КОНЕЦ] ============
+
+// ======== DESKTOP [НАЧАЛО] ============
+function addEditIcon() {
+  const editIcon = document.createElement("img");
+  editIcon.setAttribute("class", "editIcon hidden");
+  editIcon.setAttribute("src", "./assets/icons/edit_icon.svg");
+  editIcon.addEventListener("click", (event) => {
+    editDate(event);
+    editDesc(event);
+  });
+  return editIcon;
 }
 
 function editDate(ev) {
@@ -351,6 +376,7 @@ function editDate(ev) {
   const taskObj = getTaskById(Number(taskId));
   const content = taskObj.taskDate;//date.textContent;
   const newParagraphElement = changeElementType(date, "input");
+  newParagraphElement.classList.add("dynamicInput");
   newParagraphElement.value = content;
   newParagraphElement.focus();
   newParagraphElement.addEventListener("keydown", (event) => {
@@ -374,6 +400,7 @@ function editDesc(ev) {
   const desc = ev.target.parentNode.children[1].children[1];
   const content = desc.textContent;
   const newParagraphElement = changeElementType(desc, "input");
+  newParagraphElement.classList.add("dynamicInput");
   newParagraphElement.value = content;
   newParagraphElement.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
@@ -388,7 +415,7 @@ function editDesc(ev) {
     }
   });
 }
-
+// ======== DESKTOP [КОНЕЦ] ============
 
 // ================ РЕДАКТИРОВАНИЕ ТАСКА [WIP] [КОНЕЦ] ====================
 

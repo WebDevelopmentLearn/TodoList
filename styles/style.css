@@ -273,6 +273,10 @@ html {
   flex-direction: column;
 }
 
+.dynamicInput {
+  max-width: 60%;
+}
+
 /* ================ END OF TODO-LIST ==================== */
 
 
