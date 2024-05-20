@@ -20,26 +20,7 @@ const day = document.querySelector("#dayPar");
 let month = months[currentDate.getMonth()];
 dayName.textContent = days[dayOfWeek];
 
-// ================ ВЫВОД ТЕКУЩЕГО ВРЕМЕНИ В РЕАЛТАЙМЕ [НАЧАЛО] ====================
 
-function updateTime() {
-  const now = new Date();
-  const hours = now.getHours();
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  return { hours, minutes };
-}
-
-window.onload = () => {
-  updateClock();
-  setInterval(updateClock, 1000);
-};
-
-function updateClock() {
-  const { hours, minutes } = updateTime();
-  day.textContent = `${currentDate.getDate()} ${month} ${hours}:${minutes}`;
-}
-
-// ================ ВЫВОД ТЕКУЩЕГО ВРЕМЕНИ В РЕАЛТАЙМЕ [КОНЕЦ] ====================
 
 const searchInput = document.querySelector("#searchInput");
 const todoType1 = document.querySelector("#allTasks");
@@ -70,6 +51,28 @@ let id = allTasks.length !== 0 ? allTasks[allTasks.length - 1].taskId + 1 : 0;
 const tasksCheckboxes = document.querySelectorAll(".taskCheckbox");
 initTasks(allTasks);
 // renderHoverAndRemoveTasks();
+
+
+// ================ ВЫВОД ТЕКУЩЕГО ВРЕМЕНИ В РЕАЛТАЙМЕ [НАЧАЛО] ====================
+
+function updateTime() {
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  return { hours, minutes };
+}
+
+window.onload = () => {
+  updateClock();
+  setInterval(updateClock, 1000);
+};
+
+function updateClock() {
+  const { hours, minutes } = updateTime();
+  day.textContent = `${currentDate.getDate()} ${month} ${hours}:${minutes}`;
+}
+
+// ================ ВЫВОД ТЕКУЩЕГО ВРЕМЕНИ В РЕАЛТАЙМЕ [КОНЕЦ] ====================
 
 // ================ ПОИСК [НАЧАЛО] ====================
 searchInput.addEventListener("input", (event) => {
