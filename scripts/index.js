@@ -130,6 +130,15 @@ dateInput.addEventListener("input", (event) => {
     }
 });
 
+editTaskDate.addEventListener("input", (event) => {
+  const value = event.target.value;
+  // console.log(value);
+  if (newRegDate.test(value)) {
+    editTaskDate.style.backgroundColor = "#A1FF993D";
+  } else {
+    editTaskDate.style.backgroundColor = "#FC75753D";
+  }
+});
 
 // ================ ИЗМЕНЕНИЕ ТИПА ПОЛЯ С УКАЗАНИЕМ ДАТЫ [КОНЕЦ] ====================
 
@@ -352,16 +361,20 @@ function editTask(desc, date, obj) {
 
   newEditTaskBtn.addEventListener("click", (event) => {
     event.preventDefault();
-    obj.children[1].children[0].textContent = editTaskDate.value;
-    obj.children[1].children[1].textContent = editTaskDesc.value;
-    const taskId = obj.id.split("_")[1];
-    const taskObj = getTaskById(Number(taskId));
-    taskObj.taskDesc = editTaskDesc.value;
-    taskObj.taskDate = editTaskDate.value;
-    localStorage.setItem("allTasks", JSON.stringify(allTasks));
-    updateTaskCard(taskObj, allTasks, taskObj.isComplete);
-    editTaskContainer.classList.toggle("hiddenModal");
-    overlay.classList.toggle("hiddenModal");
+    if (newRegDate.test(editTaskDate.value)) {
+      obj.children[1].children[0].textContent = editTaskDate.value;
+      obj.children[1].children[1].textContent = editTaskDesc.value;
+      const taskId = obj.id.split("_")[1];
+      const taskObj = getTaskById(Number(taskId));
+      taskObj.taskDesc = editTaskDesc.value;
+      taskObj.taskDate = editTaskDate.value;
+      localStorage.setItem("allTasks", JSON.stringify(allTasks));
+      updateTaskCard(taskObj, allTasks, taskObj.isComplete);
+      editTaskContainer.classList.toggle("hiddenModal");
+      overlay.classList.toggle("hiddenModal");
+    } else {
+        alert("Неверный формат даты");
+    }
   });
   editTaskBtn = newEditTaskBtn;
 }
