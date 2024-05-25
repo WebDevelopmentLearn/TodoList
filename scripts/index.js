@@ -8,16 +8,13 @@
  * Website: https://webdevelopmentlearn.github.io/TodoList/
  */
 
+import {checkPars, updateTaskCard, getPar, createImgHidden, isMobileDevice, newRegDate, currentDate, days, months, dayOfWeek} from "../src/utils.js";
 
-const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-const newRegDate = /^\d{2}\.\d{2}\.\d{4}( \d{2}:\d{2})?$/;
-const currentDate = new Date();
-const dayOfWeek = currentDate.getDay();
-const days = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
-const months = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"];
+
+
 const dayName = document.querySelector("#dayName");
-const day = document.querySelector("#dayPar");
-let month = months[currentDate.getMonth()];
+export const day = document.querySelector("#dayPar");
+export let month = months[currentDate.getMonth()];
 dayName.textContent = days[dayOfWeek];
 
 
@@ -53,26 +50,7 @@ initTasks(allTasks);
 // renderHoverAndRemoveTasks();
 
 
-// ================ ВЫВОД ТЕКУЩЕГО ВРЕМЕНИ В РЕАЛТАЙМЕ [НАЧАЛО] ====================
 
-function updateTime() {
-  const now = new Date();
-  const hours = now.getHours();
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  return { hours, minutes };
-}
-
-window.onload = () => {
-  updateClock();
-  setInterval(updateClock, 1000);
-};
-
-function updateClock() {
-  const { hours, minutes } = updateTime();
-  day.textContent = `${currentDate.getDate()} ${month} ${hours}:${minutes}`;
-}
-
-// ================ ВЫВОД ТЕКУЩЕГО ВРЕМЕНИ В РЕАЛТАЙМЕ [КОНЕЦ] ====================
 
 // ================ ПОИСК [НАЧАЛО] ====================
 searchInput.addEventListener("input", (event) => {
@@ -123,25 +101,20 @@ todoTypes.forEach((el, id) => {
 // ================ ОБНОВЛЕНИЕ СОСТОЯНИЯ ТАСКОВ [КОНЕЦ] ====================
 
 // ================ ИЗМЕНЕНИЕ ТИПА ПОЛЯ С УКАЗАНИЕМ ДАТЫ [НАЧАЛО] ====================
-dateInput.addEventListener("input", (event) => {
+function addInputEvent(obj) {
+  obj.addEventListener("input", (event) => {
     const value = event.target.value;
-  // console.log(value);
+    // console.log(value);
     if (newRegDate.test(value)) {
-      dateInput.style.backgroundColor = "#A1FF993D";
+      obj.style.backgroundColor = "#A1FF993D";
     } else {
-      dateInput.style.backgroundColor = "#FC75753D";
+      obj.style.backgroundColor = "#FC75753D";
     }
-});
+  });
+}
 
-editTaskDate.addEventListener("input", (event) => {
-  const value = event.target.value;
-  // console.log(value);
-  if (newRegDate.test(value)) {
-    editTaskDate.style.backgroundColor = "#A1FF993D";
-  } else {
-    editTaskDate.style.backgroundColor = "#FC75753D";
-  }
-});
+addInputEvent(dateInput);
+addInputEvent(editTaskDate);
 
 // ================ ИЗМЕНЕНИЕ ТИПА ПОЛЯ С УКАЗАНИЕМ ДАТЫ [КОНЕЦ] ====================
 
@@ -264,11 +237,8 @@ function handleModal(targetContainer, obj) {
       overlay.classList.toggle("hiddenModal");
       if (!editTaskContainer.classList.contains("hiddenModal")) {
         handleOverlay();
-        // editTaskDesc.value = obj.taskDesc;
-        // editTaskDate.value = obj.taskDate;
         editTask(obj.taskDesc, obj.taskDate, targetContainer);
         handleDeleteTodoBtn(targetContainer, obj);
-
       }
     }
   });
@@ -307,9 +277,7 @@ function handleDeleteTodoBtn(targetContainer, obj) {
 // ================ УДАЛЕНИЕ ТАСКА [WIP] [НАЧАЛО] ====================
 
 function addTrashIcon() {
-  const trashIcon = document.createElement("img");
-  trashIcon.setAttribute("class", "trashIcon hidden");
-  trashIcon.setAttribute("src", "./assets/icons/trash_icon.svg");
+  const trashIcon = createImgHidden("trashIcon", "./assets/icons/trash_icon.svg")
   trashIcon.addEventListener("click", (event) => {
     const taskId = event.target.parentNode.id.split("_")[1];
     removeTask(taskId);
@@ -318,6 +286,7 @@ function addTrashIcon() {
   });
   return trashIcon;
 }
+
 
 /**
  * Функция заменяет тип элемента на новый
@@ -386,9 +355,7 @@ function editTask(desc, date, obj) {
 
 // ======== DESKTOP [НАЧАЛО] ============
 function addEditIcon() {
-  const editIcon = document.createElement("img");
-  editIcon.setAttribute("class", "editIcon hidden");
-  editIcon.setAttribute("src", "./assets/icons/edit_icon.svg");
+  const editIcon = createImgHidden("editIcon", "./assets/icons/edit_icon.svg")
   editIcon.addEventListener("click", (event) => {
     editDate(event);
     editDesc(event);
@@ -444,35 +411,6 @@ function editDesc(ev) {
 // ======== DESKTOP [КОНЕЦ] ============
 
 // ================ РЕДАКТИРОВАНИЕ ТАСКА [WIP] [КОНЕЦ] ====================
-
-
-
-// ================ УТИЛИТАРНЫЕ ФУНКЦИИ [НАЧАЛО] ====================
-function checkPars(parDate, parDesc, isChecked) {
-  parDate.style.opacity = isChecked ? 0.5 : 1;
-  parDesc.style.opacity = isChecked ? 0.5 : 1;
-  parDesc.style.textDecoration = isChecked ? "line-through" : "none";
-}
-
-function updateTaskCard(obj, tasksObjList, checked) {
-  obj.isComplete = checked;
-  localStorage.setItem("allTasks", JSON.stringify(tasksObjList));
-}
-
-
-/**
- * Функция возвращает родительский элемент по типу и объекту
- * @param type - тип элемента, где: 'date' - дата, 'desc' - описание
- * @param obj - объект, для которого нужно найти родителя
- * @returns {Element} - родительский элемент
- */
-function getPar(type, obj) {
-  if (type === "date") {
-    return  obj.parentNode.children[1].children[0];
-  } else if (type === "desc") {
-    return obj.parentNode.children[1].children[1];
-  }
-}
 
 
 /**
