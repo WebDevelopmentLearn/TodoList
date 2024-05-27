@@ -8,8 +8,29 @@
  * Website: https://webdevelopmentlearn.github.io/TodoList/
  */
 
-import {checkPars, updateTaskCard, getPar, createImgHidden, isMobileDevice, newRegDate, currentDate, days, months, dayOfWeek} from "../src/utils.js";
-
+import {
+  checkPars,
+  updateTaskCard,
+  getPar,
+  createImgHidden,
+  isMobileDevice,
+  newRegDate,
+  currentDate,
+  days,
+  months,
+  dayOfWeek,
+  list
+} from "../src/utils.js";
+// import * as todoElement from "../src/elements.js"
+import {
+  allTasks,
+  createBtn,
+  createContainer, deleteTodoBtn, editTaskBtn, editTaskContainer, editTaskDate, editTaskDesc,
+  newTaskForm, overlay,
+  taskDateInput,
+  taskDeskInput,
+  todoListContainer
+} from "../src/elements.js";
 
 
 const dayName = document.querySelector("#dayName");
@@ -18,30 +39,6 @@ export let month = months[currentDate.getMonth()];
 dayName.textContent = days[dayOfWeek];
 
 
-
-const searchInput = document.querySelector("#searchInput");
-const todoType1 = document.querySelector("#allTasks");
-const todoType2 = document.querySelector("#notCompleted");
-const todoType3 = document.querySelector("#completed");
-const todoTypes = [todoType1, todoType2, todoType3];
-
-const containers = document.querySelectorAll(".todoType");
-const dateInput = document.querySelector("#taskDate");
-const createBtn = document.querySelector("#createTask");
-const createContainer = document.querySelector(".todoCreate");
-const allTasks = JSON.parse(localStorage.getItem("allTasks")) || [];
-const todoListContainer = document.querySelector(".tasksList");
-const taskDeskInput = document.querySelector("#taskDesc");
-const taskDateInput = document.querySelector("#taskDate");
-const newTaskForm = document.querySelector("#newCase");
-
-const overlay = document.querySelector('.overlay');
-const editTaskContainer = document.querySelector(".editTaskContainer");
-const editTaskForm = document.querySelector("#editTaskForm");
-const editTaskDesc = document.querySelector("#taskDescEdit");
-const editTaskDate = document.querySelector("#taskDateEdit");
-let editTaskBtn = document.querySelector("#editTodoBtn");
-const deleteTodoBtn = document.querySelector("#deleteTodoBtn");
 
 let id = allTasks.length !== 0 ? allTasks[allTasks.length - 1].taskId + 1 : 0;
 
@@ -175,11 +172,7 @@ function createTaskCard(obj) {
   const descPar = document.createElement("p");
 
   const checkBox = document.createElement("input");
-  const list = [
-    {name: "type", value: "checkbox"},
-    {name: "name", value: "taskCheckBox"},
-    {name: "class", value: "taskCheckbox"}
-  ]
+
   list.forEach((element) => {
     checkBox.setAttribute(element.name, element.value);
   })

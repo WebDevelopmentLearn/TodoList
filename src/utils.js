@@ -6,6 +6,13 @@ export const currentDate = new Date();
 export const dayOfWeek = currentDate.getDay();
 export const days = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
 export const months = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"];
+
+export const list = [
+  {name: "type", value: "checkbox"},
+  {name: "name", value: "taskCheckBox"},
+  {name: "class", value: "taskCheckbox"}
+]
+
 // ================ УТИЛИТАРНЫЕ ФУНКЦИИ [НАЧАЛО] ====================
 export function checkPars(parDate, parDesc, isChecked) {
   parDate.style.opacity = isChecked ? 0.5 : 1;
