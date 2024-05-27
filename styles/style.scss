@@ -45,12 +45,12 @@ html {
   border: none;
   outline: none;
   background-color: $primary-bg-color;
-  color: #49454F;
+  color: #49454f;
   //transition: all 0.3s ease;
   @include transition(all, 0.3s, ease);
 
   &::placeholder {
-    color: #49454F;
+    color: #49454f;
     font-style: italic;
   }
 
@@ -227,7 +227,7 @@ html {
 
 .taskContainer {
   width: $width100;
-  background-color: $primary-color;
+  background-color: $primary-bg-color;
   border-radius: 16px;
   padding: 0.9rem;
   //display: flex;
