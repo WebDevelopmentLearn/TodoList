@@ -44,7 +44,7 @@ html {
   border-radius: 50px;
   border: none;
   outline: none;
-  background-color: #F7F2FA;
+  background-color: $primary-color;
   color: #49454F;
   transition: all 0.3s ease;
 
@@ -81,7 +81,7 @@ html {
   margin-bottom: 16px;
 }
 #newCase {
-  background-color: $bcg-color;
+  background-color: $primary-color;
   padding: 2%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -110,7 +110,7 @@ html {
 }
 
 #clearTodoCreateInputs {
-  background-color: $bcg-color;
+  background-color: $primary-color;
   border: 1px solid #79747e;
   color: #6750a4;
 }
@@ -216,7 +216,7 @@ html {
 
 .taskContainer {
   width: $width100;
-  background-color: $bcg-color;
+  background-color: $primary-color;
   border-radius: 16px;
   padding: 0.9rem;
   //display: flex;
@@ -299,7 +299,7 @@ html {
   transform: translateX(-50%);
   width: $width100;
   height: 35.42vh;
-  background-color: $bcg-color;
+  background-color: $primary-color;
   border-radius: 28px 28px 0 0;
 }
 
