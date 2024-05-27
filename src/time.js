@@ -10,10 +10,10 @@ function updateTime() {
   return { hours, minutes };
 }
 
-window.onload = () => {
+document.addEventListener("DOMContentLoaded", () => {
   updateClock();
   setInterval(updateClock, 1000);
-};
+});
 
 function updateClock() {
   const { hours, minutes } = updateTime();

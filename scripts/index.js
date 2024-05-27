@@ -23,13 +23,13 @@ import {
 } from "../src/utils.js";
 // import * as todoElement from "../src/elements.js"
 import {
-  allTasks,
+  allTasks, containers,
   createBtn,
-  createContainer, deleteTodoBtn, editTaskBtn, editTaskContainer, editTaskDate, editTaskDesc,
+  createContainer, dateInput, deleteTodoBtn, editTaskBtn, editTaskContainer, editTaskDate, editTaskDesc,
   newTaskForm, overlay,
   taskDateInput,
   taskDeskInput,
-  todoListContainer
+  todoListContainer, todoTypes
 } from "../src/elements.js";
 
 
