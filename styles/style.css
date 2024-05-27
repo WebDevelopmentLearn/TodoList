@@ -41,15 +41,14 @@ html {
   width: 96vw;
   padding: 10px 20px 10px 30px;
   border-radius: 50px;
-  border: 1px solid #b18de5;
+  border: none;
   outline: none;
-  background-color: #e9dbf6;
-  box-shadow: 1px 2px 7px 2px #cdc0d8;
-  color: #020335;
+  background-color: #F7F2FA;
+  color: #49454F;
   transition: all 0.3s ease;
 }
 #searchInput::placeholder {
-  color: #560d9b;
+  color: #49454F;
   font-style: italic;
 }
 #searchInput:focus {

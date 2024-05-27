@@ -42,15 +42,14 @@ html {
   width: 96vw;
   padding: 10px 20px 10px 30px;
   border-radius: 50px;
-  border: 1px solid #b18de5ff;
+  border: none;
   outline: none;
-  background-color: #e9dbf6ff;
-  box-shadow: 1px 2px 7px 2px #cdc0d8ff;
-  color: #020335ff;
+  background-color: #F7F2FA;
+  color: #49454F;
   transition: all 0.3s ease;
 
   &::placeholder {
-    color: #560d9bff;
+    color: #49454F;
     font-style: italic;
   }
 
