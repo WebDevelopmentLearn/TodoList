@@ -16,11 +16,45 @@
   border-radius: 100px;
   justify-self: end;
   cursor: $pointer-cursor;
-  color: $white-color;
+  color: $white-font-color;
   border: none;
 }
 
 @mixin baseIcon($width, $height) {
   width: $width;
   height: $height;
+}
+
+@mixin baseWAndH($width, $height) {
+  //width: 90vw;
+  //height: 46px;
+  width: $width;
+  height: $height;
+}
+
+@mixin boxShadow($value1, $value2, $value3, $value4, $color) {
+  //box-shadow: 1px 2px 4px 2px #e6e0ebff;
+  box-shadow: $value1, $value2, $value3, $value4, $color;
+}
+
+@mixin transition($valueType, $duraction, $type) {
+  transition: $valueType $duraction $type;
+}
+
+@mixin setPositionLT($positionType, $leftValue, $topValue) {
+  position: $positionType;
+  left: $leftValue;
+  top: $topValue;
+}
+
+@mixin setPositionLB($positionType, $leftValue, $bottomValue) {
+  position: $positionType;
+  left: $leftValue;
+  bottom: $bottomValue;
+}
+
+@mixin setPositionRB($positionType, $rightValue, $bottomValue) {
+  position: $positionType;
+  right: $rightValue;
+  bottom: $bottomValue;
 }
