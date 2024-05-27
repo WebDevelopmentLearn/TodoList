@@ -44,7 +44,7 @@ html {
   border-radius: 50px;
   border: none;
   outline: none;
-  background-color: $primary-color;
+  background-color: $primary-bg-color;
   color: #49454F;
   transition: all 0.3s ease;
 
@@ -81,7 +81,7 @@ html {
   margin-bottom: 16px;
 }
 #newCase {
-  background-color: $primary-color;
+  background-color: $primary-bg-color;
   padding: 2%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -104,15 +104,15 @@ html {
 
 #createTodoBtn {
   grid-column-start: 2;
-  background-color: #6750a4;
-  color: $white-color;
+  background-color: $secondary-bg-color;
+  color: $white-font-color;
   border: none;
 }
 
 #clearTodoCreateInputs {
-  background-color: $primary-color;
+  background-color: $primary-bg-color;
   border: 1px solid #79747e;
-  color: #6750a4;
+  color: $secondary-font-color;
 }
 
 #createTodoBtn,
@@ -299,7 +299,7 @@ html {
   transform: translateX(-50%);
   width: $width100;
   height: 35.42vh;
-  background-color: $primary-color;
+  background-color: $primary-bg-color;
   border-radius: 28px 28px 0 0;
 }
 
@@ -321,7 +321,7 @@ html {
 
 #editTodoBtn {
   @include todoBtn;
-  background-color: #6750a4;
+  background-color: $secondary-bg-color;
 }
 
 #deleteTodoBtn {
