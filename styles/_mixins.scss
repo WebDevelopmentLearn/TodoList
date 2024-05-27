@@ -1,0 +1,26 @@
+//@mixin flex-box {
+//  display: flex;
+//  justify-content: center;
+//  align-items: center;
+//}
+
+@mixin flex-box($justifyValue: center, $align-items: center) {
+  display: flex;
+  justify-content: $justifyValue;
+  align-items: $align-items;
+}
+
+@mixin todoBtn {
+  width: 50%;
+  height: 40px;
+  border-radius: 100px;
+  justify-self: end;
+  cursor: $pointer-cursor;
+  color: $white-color;
+  border: none;
+}
+
+@mixin baseIcon($width, $height) {
+  width: $width;
+  height: $height;
+}

@@ -1,20 +1,5 @@
 @import "variables";
-
-@mixin flex-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-@mixin todoBtn {
-  width: 50%;
-  height: 40px;
-  border-radius: 100px;
-  justify-self: end;
-  cursor: $pointer-cursor;
-  color: $white-color;
-  border: none;
-}
+@import "mixins";
 
 * {
   margin: 0;
@@ -173,9 +158,7 @@ html {
 }
 
 .todoGroup {
-  display: flex;
-  justify-content: center;
-
+  @include flex-box(normal, center);
   overflow: hidden;
   color: #1d192b;
   margin-bottom: 16px;
@@ -237,15 +220,17 @@ html {
   background-color: $bcg-color;
   border-radius: 16px;
   padding: 0.9rem;
-  display: flex;
-  align-items: center;
+  //display: flex;
+  //align-items: center;
+  @include flex-box(normal, center);
   gap: 10px;
   position: relative;
 }
 
 .taskInfo {
   width: $width100;
-  display: flex;
+  //display: flex;
+  @include flex-box(normal, normal);
   gap: 5px;
 }
 
@@ -268,7 +253,7 @@ html {
 }
 
 .taskInfo {
-  display: flex;
+  @include flex-box(normal, normal);
   flex-direction: column;
 }
 
@@ -279,16 +264,14 @@ html {
 /* ================ END OF TODO-LIST ==================== */
 
 .trashIcon {
-  width: 20px;
-  height: 20px;
+  @include baseIcon(20px, 20px);
   cursor: $pointer-cursor;
   position: absolute;
   right: 20px;
 }
 
 .editIcon {
-  width: 20px;
-  height: 20px;
+  @include baseIcon(20px, 20px);
   cursor: $pointer-cursor;
   position: absolute;
   right: 60px;

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   margin: 0;
   padding: 0;
@@ -28,9 +29,7 @@ html {
 }
 
 /* ================ START OF SEARCH ==================== */
-
 #searchContainer {
-  /*width: 50vw;*/
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -42,24 +41,20 @@ html {
   width: 96vw;
   padding: 10px 20px 10px 30px;
   border-radius: 50px;
-  border: 1px solid rgb(177, 141, 229);
+  border: 1px solid #b18de5;
   outline: none;
-  background-color: rgb(233, 219, 246);
-  box-shadow: 1px 2px 7px 2px rgb(205, 192, 216);
-  color: rgb(2, 3, 53);
+  background-color: #e9dbf6;
+  box-shadow: 1px 2px 7px 2px #cdc0d8;
+  color: #020335;
   transition: all 0.3s ease;
-
 }
-
 #searchInput::placeholder {
-  color: rgb(86, 13, 155);
+  color: #560d9b;
   font-style: italic;
-
 }
-
 #searchInput:focus {
-  border: 1px solid rgb(71, 42, 114);
-  box-shadow: 1px 2px 4px 2px rgb(230, 224, 235);
+  border: 1px solid #472a72;
+  box-shadow: 1px 2px 4px 2px #e6e0eb;
 }
 
 .searchLabel {
@@ -76,13 +71,14 @@ html {
   height: 20px;
   opacity: 0.7;
 }
-/* ================ START OF SEARCH ==================== */
 
+/* ================ START OF SEARCH ==================== */
 /* ================ START OF TASK CREATE ==================== */
 .todoCreate > h2 {
   font-size: 2rem;
   margin-bottom: 16px;
 }
+
 #newCase {
   background-color: #f7f2fa;
   padding: 2%;
@@ -92,7 +88,6 @@ html {
   grid-gap: 16px;
   border-radius: 16px;
 }
-
 
 #taskDesc,
 #taskDate {
@@ -119,7 +114,6 @@ html {
   color: #6750a4;
 }
 
-
 #createTodoBtn,
 #clearTodoCreateInputs {
   width: 100%;
@@ -128,15 +122,15 @@ html {
   justify-self: end;
   cursor: pointer;
 }
-/* ================ END OF TASK CREATE ==================== */
 
+/* ================ END OF TASK CREATE ==================== */
 /* ================ START OF CREATE TASK BTN ==================== */
 #createTask {
   width: 60px;
   height: 60px;
   border-radius: 16px;
   background-color: #ebdef7;
-  box-shadow: 1px 2px 4px 2px #00000015;
+  box-shadow: 1px 2px 4px 2px rgba(0, 0, 0, 0.0823529412);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -146,7 +140,6 @@ html {
   transition: all 0.5s ease;
   cursor: pointer;
 }
-
 #createTask:hover {
   background-color: #ccb8d9;
 }
@@ -155,8 +148,8 @@ html {
   width: 40%;
   height: 40%;
 }
-/* ================ END OF CREATE TASK BTN ==================== */
 
+/* ================ END OF CREATE TASK BTN ==================== */
 /* ================ START OF TODO-LIST ==================== */
 .tasksContainer > h2 {
   font-size: 2rem;
@@ -165,8 +158,8 @@ html {
 
 .todoGroup {
   display: flex;
-  justify-content: center;
-
+  justify-content: normal;
+  align-items: center;
   overflow: hidden;
   color: #1d192b;
   margin-bottom: 16px;
@@ -176,9 +169,11 @@ html {
   display: inline-block;
   width: 33vw;
 }
-.todoGroup input[type="radio"] {
+
+.todoGroup input[type=radio] {
   display: none;
 }
+
 .todoGroup label {
   width: 100%;
   display: inline-block;
@@ -194,6 +189,7 @@ html {
 .todoGroup .todoType:first-child label {
   border-radius: 16px 0 0 16px;
 }
+
 .todoGroup .todoType:last-child label {
   border-radius: 0 16px 16px 0;
   border-right: 1px solid #79747e;
@@ -201,10 +197,10 @@ html {
 
 .selected::before {
   content: "✓ ";
-  color: #1D192B;
+  color: #1d192b;
 }
 
-.todoGroup input[type="radio"]:checked + label {
+.todoGroup input[type=radio]:checked + label {
   background: #e8def8;
 }
 
@@ -212,27 +208,26 @@ html {
   color: #666;
 }
 
-.todoGroup input[type="radio"]:disabled + label {
+.todoGroup input[type=radio]:disabled + label {
   background: #efefef;
   color: #666;
 }
 
-
 .tasksList {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   gap: 12px;
 }
 
-
 .taskContainer {
   width: 100%;
-  background-color: #F7F2FA;
+  background-color: #f7f2fa;
   border-radius: 16px;
   padding: 0.9rem;
   display: flex;
+  justify-content: normal;
   align-items: center;
   gap: 10px;
   position: relative;
@@ -241,6 +236,8 @@ html {
 .taskInfo {
   width: 100%;
   display: flex;
+  justify-content: normal;
+  align-items: normal;
   gap: 5px;
 }
 
@@ -255,7 +252,7 @@ html {
   height: 18px;
   margin-left: 10px;
   margin-right: 10px;
-  accent-color: #D0BCFF;
+  accent-color: #d0bcff;
 }
 
 .taskContainer > input:checked {
@@ -264,6 +261,8 @@ html {
 
 .taskInfo {
   display: flex;
+  justify-content: normal;
+  align-items: normal;
   flex-direction: column;
 }
 
@@ -272,8 +271,6 @@ html {
 }
 
 /* ================ END OF TODO-LIST ==================== */
-
-
 .trashIcon {
   width: 20px;
   height: 20px;
@@ -290,8 +287,6 @@ html {
   right: 60px;
 }
 
-
-
 /* ================ START OF MODAL ==================== */
 .overlay {
   position: fixed;
@@ -299,15 +294,15 @@ html {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.4980392157);
   z-index: 1;
 }
 
 .editTaskContainer {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   gap: 10px;
   position: fixed;
   z-index: 2;
@@ -316,15 +311,15 @@ html {
   transform: translateX(-50%);
   width: 100%;
   height: 35.42vh;
-  background-color: #F7F2FA;
+  background-color: #f7f2fa;
   border-radius: 28px 28px 0 0;
 }
 
 #editTaskForm {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   gap: 14px;
 }
 
@@ -337,16 +332,15 @@ html {
   padding-left: 2%;
 }
 
-
 #editTodoBtn {
   width: 50%;
   height: 40px;
   border-radius: 100px;
   justify-self: end;
   cursor: pointer;
-  background-color: #6750a4;
   color: #ffffff;
   border: none;
+  background-color: #6750a4;
 }
 
 #deleteTodoBtn {
@@ -355,13 +349,14 @@ html {
   border-radius: 100px;
   justify-self: end;
   cursor: pointer;
-  background-color: #e34c33;
   color: #ffffff;
   border: none;
+  background-color: #e34c33;
 }
 
 /* ================ END OF MODAL ==================== */
-
 .hiddenModal {
   display: none;
 }
+
+/*# sourceMappingURL=style.css.map */
