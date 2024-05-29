@@ -15,10 +15,9 @@ export const taskDeskInput = document.querySelector("#taskDesc");
 export const taskDateInput = document.querySelector("#taskDate");
 export const newTaskForm = document.querySelector("#newCase");
 
-export const overlay = document.querySelector('.overlay');
+export const overlay = document.querySelector(".overlay");
 export const editTaskContainer = document.querySelector(".editTaskContainer");
 export const editTaskForm = document.querySelector("#editTaskForm");
 export const editTaskDesc = document.querySelector("#taskDescEdit");
 export const editTaskDate = document.querySelector("#taskDateEdit");
-export let editTaskBtn = document.querySelector("#editTodoBtn");
 export const deleteTodoBtn = document.querySelector("#deleteTodoBtn");

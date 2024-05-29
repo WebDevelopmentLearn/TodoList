@@ -20,4 +20,8 @@ function updateClock() {
   day.textContent = `${currentDate.getDate()} ${month} ${hours}:${minutes}`;
 }
 
+const dayName = document.querySelector("#dayName");
+
+dayName.textContent = days[dayOfWeek];
+
 // ================ ВЫВОД ТЕКУЩЕГО ВРЕМЕНИ В РЕАЛТАЙМЕ [КОНЕЦ] ====================
