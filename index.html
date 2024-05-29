@@ -1,68 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
+  <head>
+    <meta charset="UTF-8" />
     <!--    <meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
     <title>TodoList</title>
-    <link href="./styles/style.css" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link href="./styles/style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link rel="icon" href="assets/logo.svg" type="image/x-icon" />
     <script crossorigin="anonymous" src="https://kit.fontawesome.com/5a495bdc39.js"></script>
-</head>
-<body>
-<div class="todoContainer">
-    <h1 class="text500" id="dayName">Среда</h1>
-    <h2 class="text500" id="dayPar">3 января</h2>
-    <form action="" id="searchContainer">
+  </head>
+  <body>
+    <div class="todoContainer">
+      <h1 class="text500" id="dayName">Среда</h1>
+      <h2 class="text500" id="dayPar">3 января</h2>
+      <form action="" id="searchContainer">
         <label class="searchLabel" for="searchInput">
-            <form>
-                <input id="searchInput" name="search" placeholder="Поиск" type="search"/>
-            </form>
-            <img alt="search_icon" id="searchIcon" src="./assets/icons/search_icon.svg"/>
+          <form>
+            <input id="searchInput" name="search" placeholder="Поиск" type="search" />
+          </form>
+          <img alt="search_icon" id="searchIcon" src="./assets/icons/search_icon.svg" />
         </label>
-    </form>
-    <div class="todoCreate hidden">
+      </form>
+      <div class="todoCreate hidden">
         <h2 class="text500">Новая запись</h2>
         <form action="" id="newCase">
-            <input class="text400" id="taskDesc" name="taskDesc" type="text" placeholder="Описание"/>
-            <input class="text400" id="taskDate" name="taskDate" type="text" placeholder="Дата и время в формате: дд.мм.гггг чч:мм"/>
-            <input class="text500" id="createTodoBtn" name="createTodoBtn" type="submit" value="Добавить"/>
-            <input class="text500" id="clearTodoCreateInputs" name="clearTodoCreateInputs" type="reset" value="Очистить"/>
+          <input class="text400" id="taskDesc" name="taskDesc" type="text" placeholder="Описание" />
+          <input
+            class="text400"
+            id="taskDate"
+            name="taskDate"
+            type="text"
+            placeholder="Дата и время в формате: дд.мм.гггг чч:мм"
+          />
+          <input class="text500" id="createTodoBtn" name="createTodoBtn" type="submit" value="Добавить" />
+          <input
+            class="text500"
+            id="clearTodoCreateInputs"
+            name="clearTodoCreateInputs"
+            type="reset"
+            value="Очистить"
+          />
         </form>
-    </div>
-    <div class="tasksContainer">
+      </div>
+      <div class="tasksContainer">
         <h2 class="text500">Список дел</h2>
         <div class="todoGroup">
-            <div class="todoType">
-                <input checked id="allTasks" name="radio" type="radio" value="1"/>
-                <label class="text500 selected" for="allTasks">Все</label>
-            </div>
-            <div class="todoType">
-                <input id="notCompleted" name="radio" type="radio" value="2"/>
-                <label class="text500" for="notCompleted">Активные</label>
-            </div>
-            <div class="todoType">
-                <input id="completed" name="radio" type="radio" value="3"/>
-                <label class="text500" for="completed">Завершенные</label>
-            </div>
+          <div class="todoType">
+            <input checked id="allTasks" name="radio" type="radio" value="1" />
+            <label class="text500 selected" for="allTasks">Все</label>
+          </div>
+          <div class="todoType">
+            <input id="notCompleted" name="radio" type="radio" value="2" />
+            <label class="text500" for="notCompleted">Активные</label>
+          </div>
+          <div class="todoType">
+            <input id="completed" name="radio" type="radio" value="3" />
+            <label class="text500" for="completed">Завершенные</label>
+          </div>
         </div>
         <div class="tasksList"></div>
-    </div>
-    <div id="createTask">
-        <img alt="create_icon" src="./assets/icons/create_icon.svg"/>
-    </div>
-    <div class="overlay hiddenModal"></div>
-    <div class="editTaskContainer hiddenModal">
-        <img alt="drag_handle" src="./assets/icons/drag_handle.svg"/>
+      </div>
+      <div id="createTask">
+        <img alt="create_icon" src="./assets/icons/create_icon.svg" />
+      </div>
+      <div class="overlay hiddenModal"></div>
+      <div class="editTaskContainer hiddenModal">
+        <img alt="drag_handle" src="./assets/icons/drag_handle.svg" />
         <form id="editTaskForm">
-            <input class="text400 taskInput" id="taskDescEdit" name="taskDescEdit" type="text" placeholder="Описание"/>
-            <input class="text400 taskInput" id="taskDateEdit" name="taskDateEdit" type="text" placeholder="Дата и время в формате: дд.мм.гггг чч:мм"/>
-            <input class="text500" id="editTodoBtn" name="editTodoBtn" type="button" value="Изменить"/>
-            <input class="text500" id="deleteTodoBtn" name="deleteTodoBtn" type="button" value="Удалить"/>
+          <input class="text400 taskInput" id="taskDescEdit" name="taskDescEdit" type="text" placeholder="Описание" />
+          <input
+            class="text400 taskInput"
+            id="taskDateEdit"
+            name="taskDateEdit"
+            type="text"
+            placeholder="Дата и время в формате: дд.мм.гггг чч:мм"
+          />
+          <input class="text500" id="editTodoBtn" name="editTodoBtn" type="button" value="Изменить" />
+          <input class="text500" id="deleteTodoBtn" name="deleteTodoBtn" type="button" value="Удалить" />
         </form>
+      </div>
     </div>
-</div>
-</body>
-<script src="./scripts/index.js" type="module"></script>
-<script src="./src/time.js" type="module"></script>
+  </body>
+  <script src="./scripts/index.js"></script>
+  <script src="./src/time.js" type="module"></script>
 </html>
