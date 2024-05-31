@@ -188,12 +188,6 @@ document.addEventListener("DOMContentLoaded", () => {
     list.forEach((element) => {
       checkBox.setAttribute(element.name, element.value);
     });
-    // checkBox.checked = obj.isComplete;
-    // checkPars(datePar, descPar, checkBox.checked);
-    // checkBox.addEventListener("change", (event) => {
-    //   updateTaskCard(obj, allTasks, event.target.checked);
-    //   checkPars(getPar("date",event.target), getPar("desc",event.target), event.target.checked);
-    // });
     updateAndHandleCheckbox(checkBox, obj, datePar, descPar);
     taskContainer.id = "task_" + obj.taskId;
     taskContainer.classList.add("taskContainer");
@@ -285,8 +279,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const trashIcon = createImgHidden("trashIcon", "./assets/icons/trash_icon.svg");
     trashIcon.addEventListener("click", (event) => {
       const taskId = event.target.parentNode.id.split("_")[1];
+      const obj = getTaskById(Number(taskId));
       removeTask(taskId);
-      updateTaskCard(taskId, allTasks, false);
+      updateTaskCard(obj, allTasks, obj.isComplete);
       event.target.parentNode.remove();
     });
     return trashIcon;
@@ -335,12 +330,11 @@ document.addEventListener("DOMContentLoaded", () => {
     newEditTaskBtn.addEventListener("click", (event) => {
       event.preventDefault();
       if (newRegDate.test(editTaskDate.value)) {
-        obj.children[1].children[0].textContent = editTaskDate.value;
+        obj.children[1].children[0].textContent = replaceMonth(editTaskDate.value);
         obj.children[1].children[1].textContent = editTaskDesc.value;
         const taskId = obj.id.split("_")[1];
         const taskObj = getTaskById(Number(taskId));
         taskObj.taskDesc = editTaskDesc.value;
-        console.log(editTaskDate.value);
         taskObj.taskDate = editTaskDate.value;
         localStorage.setItem("allTasks", JSON.stringify(allTasks));
         updateTaskCard(taskObj, allTasks, taskObj.isComplete);
